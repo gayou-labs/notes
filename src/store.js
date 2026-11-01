@@ -3,6 +3,10 @@
 //  - 雲端模式：Firebase（Firestore），多裝置即時同步，離線也能用
 import { firebaseConfig } from "./config.js";
 
+// 預覽版（/notes/preview/）用獨立的測試資料，不會動到正式資料
+export const CHANNEL = import.meta.env.VITE_CHANNEL === "preview" ? "preview" : "main";
+const NS = CHANNEL === "preview" ? "preview-" : "";
+
 export const CLIENT_ID = Math.random().toString(36).slice(2, 10);
 export const uid16 = () =>
   Array.from(crypto.getRandomValues(new Uint8Array(10)), (b) => (b % 36).toString(36)).join("");
@@ -48,7 +52,7 @@ function track(p) {
 function idb() {
   if (!idb.p) {
     idb.p = new Promise((res, rej) => {
-      const r = indexedDB.open("notes-local", 1);
+      const r = indexedDB.open(NS + "notes-local", 1);
       r.onupgradeneeded = () => r.result.createObjectStore("kv");
       r.onsuccess = () => res(r.result);
       r.onerror = () => rej(r.error);
@@ -197,8 +201,8 @@ async function createFirebaseBackend() {
     db = F.getFirestore(app);
   }
   let uid = null;
-  const col = (name) => F.collection(db, "users", uid, name);
-  const ref = (name, id) => F.doc(db, "users", uid, name, id);
+  const col = (name, ns = NS) => F.collection(db, "users", uid, ns + name);
+  const ref = (name, id, ns = NS) => F.doc(db, "users", uid, ns + name, id);
   // Firestore 的文件 ID 不能有斜線
   const safe = (id) => String(id).replace(/\//g, "_");
 
@@ -283,10 +287,23 @@ async function createFirebaseBackend() {
       const m = await docsToMap("kv");
       return Object.fromEntries(Object.entries(m).map(([k, v]) => [k, v.value]));
     },
+    // 預覽版專用：把正式版的資料複製一份過來測試（只讀正式資料，不會改它）
+    async copyFromMain(onProgress) {
+      if (!NS) return;
+      let n = 0;
+      for (const name of ["pages", "content", "files", "kv"]) {
+        const snap = await F.getDocs(col(name, ""));
+        for (const d of snap.docs) {
+          await F.setDoc(ref(name, d.id), d.data());
+          onProgress?.(++n);
+        }
+      }
+      return n;
+    },
   };
 }
 
-export const cloudConfigured = !!(firebaseConfig && firebaseConfig.apiKey);
+export const cloudConfigured = !!(firebaseConfig && firebaseConfig.apiKey) && import.meta.env.VITE_LOCAL !== "1"; // VITE_LOCAL=1：測試用本機模式
 export const store = cloudConfigured ? await createFirebaseBackend() : createLocalBackend();
 
 /* ---------- 備份：匯出 / 匯入 ---------- */

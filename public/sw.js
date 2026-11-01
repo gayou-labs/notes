@@ -1,5 +1,6 @@
 // 讓網頁在沒網路時也能打開（只快取程式本身；筆記資料由 Firebase 的離線快取負責）
-const CACHE = "notes-shell-v1";
+// 正式版與預覽版各用自己的快取
+const CACHE = "notes-shell-v2-" + new URL(self.registration.scope).pathname;
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => {

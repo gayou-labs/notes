@@ -1,9 +1,15 @@
 name: 發布網站
 
+# main 分支 → 正式版 https://gayou-labs.github.io/notes/
+# preview 分支 → 預覽版 https://gayou-labs.github.io/notes/preview/（獨立測試資料）
+# （GitHub Pages 只允許從 main 發布，所以預覽版由「預覽版更新」這個流程通知這裡重建）
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: [預覽版更新]
+    types: [completed]
 
 permissions:
   contents: read
@@ -18,16 +24,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: 取得正式版
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build
+      - name: 建置正式版
+        working-directory: main
+        run: npm ci && npm run build
+      - name: 檢查有沒有預覽版
+        id: pv
+        run: |
+          if git ls-remote --exit-code --heads "https://github.com/${{ github.repository }}" preview >/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: 取得預覽版
+        if: steps.pv.outputs.exists == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: preview
+          path: preview
+      - name: 建置預覽版
+        if: steps.pv.outputs.exists == 'true'
+        working-directory: preview
+        run: npm ci && VITE_CHANNEL=preview npm run build && cp -r dist ../main/dist/preview
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: main/dist
   deploy:
     needs: build
     runs-on: ubuntu-latest

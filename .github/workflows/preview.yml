@@ -1,0 +1,12 @@
+name: 預覽版更新
+
+# preview 分支有新的改動時執行，接著會自動觸發「發布網站」重建正式版＋預覽版
+on:
+  push:
+    branches: [preview]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "預覽版有更新，準備重新發布"

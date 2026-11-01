@@ -1,6 +1,7 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   store,
+  CHANNEL,
   cloudConfigured,
   uid16,
   onSyncStatus,
@@ -218,6 +219,12 @@ export default function App() {
             </button>
           </div>
         )}
+        {CHANNEL === "preview" && (
+          <div className="banner preview">
+            預覽版：這裡用的是獨立的測試資料，怎麼改都不會影響正式版。
+            <a className="btn sm" href="../">回正式版</a>
+          </div>
+        )}
         {!cloudConfigured && route.view !== "settings" && (
           <div className="banner">本機試用模式：資料只存在這台裝置。設定好 Firebase 後就會改成雲端同步。</div>
         )}
@@ -242,7 +249,7 @@ function Sidebar({ ctx, route, sync, onSearch, onClose }) {
   return (
     <aside className="side">
       <div className="side-head">
-        <div className="brand">筆記</div>
+        <div className="brand">筆記{CHANNEL === "preview" && <span className="tag-preview">預覽</span>}</div>
         <button className="ibtn" title="關閉側邊欄" onClick={onClose}>
           <Icon name="left" />
         </button>
@@ -790,6 +797,28 @@ function SettingsView({ ctx, themePref, setTheme, sync }) {
           </div>
         )}
       </section>
+
+      {CHANNEL === "preview" && cloudConfigured && (
+        <section className="card">
+          <h3>預覽版測試資料</h3>
+          <p className="muted sm">把正式版目前的筆記、白板、排程複製一份到預覽版，方便用真實資料測試新功能。正式資料不會被修改。</p>
+          <button
+            className="btn"
+            onClick={async () => {
+              if (!confirm("用正式版的資料覆蓋預覽版的測試資料？")) return;
+              setMsg("複製中…");
+              try {
+                const n = await store.copyFromMain((k) => setMsg(`複製中…（${k}）`));
+                setMsg(`已複製 ${n} 筆資料。`);
+              } catch (e) {
+                setMsg("複製失敗：" + e.message);
+              }
+            }}
+          >
+            複製正式資料到預覽版
+          </button>
+        </section>
+      )}
 
       <section className="card">
         <h3>外觀</h3>

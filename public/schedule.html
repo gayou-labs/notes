@@ -276,7 +276,8 @@ table.mst{border-collapse:separate;border-spacing:0}
 .fmt input{margin-top:4px}
 .fmt small{display:block;color:var(--muted);font-size:12px}
 /* resizable columns */
-#pdetail .tt thead th{position:relative}
+#pdetail .tt thead th,#rBody .wi-t thead th{position:relative}
+#rBody .wi-t thead th:hover .colrs::after{background:var(--line)}
 .colrs{position:absolute;top:0;bottom:0;right:-4px;width:8px;cursor:col-resize;z-index:2}
 .colrs::after{content:"";position:absolute;top:22%;bottom:22%;left:3px;width:2px;border-radius:1px;background:transparent}
 #pdetail .tt thead th:hover .colrs::after,body.colresizing .colrs::after{background:var(--line)}
@@ -490,6 +491,7 @@ table.ms-t{min-width:560px}
 .cpick .crow{display:flex;align-items:center;gap:8px;font-size:13px}
 .cpick input[type=color]{width:40px;height:28px;border:1px solid var(--line);border-radius:5px;padding:2px;background:var(--surface);cursor:pointer}
 .pdetail{flex:1;min-width:0;overflow:auto;padding:22px 26px 40px}
+.pdetail,.pview,.rview,.myview{overflow-anchor:none}
 .phead{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:6px}
 .phead input.ptitle{font-size:22px;font-weight:700;border:1px solid transparent;background:none;border-radius:6px;padding:2px 6px;min-width:0;flex:1 1 220px}
 .phead input.ptitle:hover,.phead input.ptitle:focus{border-color:var(--line);background:var(--surface)}
@@ -575,12 +577,21 @@ table.tt{border-collapse:collapse;width:100%;min-width:1020px}
 .retchip .muted{font-size:12px;margin-left:4px}
 table.rt-t{min-width:900px}
 table.mg-t{min-width:980px}
+table.mg-t th[data-ck="name"]{min-width:200px}
 .mg-t tr.rgrp td{background:color-mix(in srgb,var(--gc,#888) 9%,var(--surface));border-top:2px solid color-mix(in srgb,var(--gc,#888) 35%,var(--line));padding:6px 10px}
 .mg-t tr.rgrp.none td{background:var(--hover);border-top-color:var(--line)}
-.rgrp-in{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rgrp-in{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;left:10px;width:min(100%,var(--mgw,100%))}
 .rgrp-in input[type=date]{width:140px}
 .rgrp-in .rg-name{flex:1;min-width:160px;max-width:320px;font-weight:600}
 .rgrp-in select{max-width:170px}
+.rgw{position:relative;display:inline-flex;align-items:center}
+.rgw[data-rgk="name"]{flex:1;min-width:160px;max-width:320px}
+.rgw[data-rgk="stage"]{width:170px}
+.rgw>input,.rgw>select{width:100%!important;max-width:none!important;min-width:0!important;flex:1}
+.rgrs{position:absolute;top:0;bottom:0;right:-6px;width:9px;cursor:col-resize;z-index:2}
+.rgrs::after{content:"";position:absolute;top:20%;bottom:20%;left:3px;width:2px;border-radius:1px;background:transparent}
+.rgrp:hover .rgrs::after,body.colresizing .rgrs::after{background:var(--line)}
+.rgrs:hover::after{background:var(--work)!important}
 .rg-tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:9px;background:var(--gc,#8A939B);color:#fff;white-space:nowrap}
 .rg-tag.none{background:#8A939B}
 .rg-st{display:inline-flex;align-items:center;gap:4px}
@@ -624,6 +635,26 @@ table.wr-t{min-width:1100px}
 .wr-t .diff-up{color:var(--red)}.wr-t .diff-down{color:#2E8B57}
 .wr-t tfoot .num{font-weight:700}
 table.it-t{min-width:980px}
+.wcat{margin:0 0 18px;border-radius:8px}
+.wcat-h{display:flex;align-items:center;gap:10px;padding:6px 4px 8px}
+.wcat-h b{font-size:15px}.wcat-h .muted{font-size:12px}
+.wcat-name{font-size:15px;font-weight:700;border:1px solid transparent;background:none;border-radius:5px;padding:2px 6px;min-width:120px}
+.wcat-name:hover,.wcat-name:focus{border-color:var(--line);background:var(--surface)}
+.wgrip{cursor:grab;color:var(--muted);user-select:none;letter-spacing:-2px}
+.wcat.wdragging{opacity:.45}
+.wcat.wdrop-b{box-shadow:0 -3px 0 var(--work)}.wcat.wdrop-a{box-shadow:0 3px 0 var(--work)}
+table.wi-t{min-width:820px;table-layout:fixed}
+.wi-t td.wnm{white-space:nowrap}
+.wigrip{cursor:grab;color:var(--muted);user-select:none;touch-action:none;letter-spacing:-2px;display:inline-block;width:18px;vertical-align:middle}
+.wi-t td.wnm input.c-name{width:calc(100% - 20px)!important;display:inline-block;vertical-align:middle}
+.wcat.widrop{outline:2px dashed var(--work);outline-offset:3px;background:color-mix(in srgb,var(--work) 6%,transparent)}
+.bproj .pj{display:inline-flex;align-items:center;gap:5px;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:3px 9px;margin:0 6px 6px 0;background:var(--surface);cursor:pointer;color:inherit}
+.bproj .pj:hover{background:var(--hover)}
+.wi-t .pjs{white-space:normal}
+.wi-t .pjs .pj,.wr-t .pj{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:4px;padding:0 6px;margin:1px 4px 1px 0;white-space:nowrap;background:none;cursor:pointer;color:inherit}
+.wi-t .pjs .pj:hover{background:var(--hover)}
+.wi-t select{max-width:130px}
+#wuItem{width:100%;max-width:380px}
 .it-t .pj{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:4px;padding:0 6px;margin:1px 4px 1px 0;white-space:nowrap}
 .bt-t{min-width:560px}
 .bt-t input.n{width:80px;text-align:right}
@@ -837,8 +868,8 @@ dialog::backdrop{background:rgba(15,20,25,.45)}
   <div class="rview" id="rview" hidden>
     <div class="rhead">
       <div class="tabs" role="tablist" aria-label="工時紀錄顯示方式">
-        <button role="tab" id="rModeProj" aria-selected="true">依專案</button>
-        <button role="tab" id="rModeItem" aria-selected="false">品項總覽</button>
+        <button role="tab" id="rModeItem" aria-selected="true">工時品項</button>
+        <button role="tab" id="rModeProj" aria-selected="false">依專案估時</button>
       </div>
       <select class="sel" id="rProject" aria-label="專案" style="max-width:240px"></select>
       <input class="sel" id="rSearch" placeholder="搜尋製作品項…" aria-label="搜尋製作品項" hidden style="max-width:240px">
@@ -945,21 +976,15 @@ dialog::backdrop{background:rgba(15,20,25,.45)}
   </form>
 </dialog>
 
-<dialog id="wiPickDlg">
-  <div class="dlg">
-    <div class="dlg-head"><h2>從其他專案加入品項</h2><button class="xbtn" data-close aria-label="關閉"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button></div>
-    <div class="note">勾選要用在這個專案的品項。會帶入單位，預估時數預設用其他專案的實際平均（沒有實際紀錄就用預估平均），之後都可以改。</div>
-    <div class="checks" id="wiPickList"></div>
-    <div class="actions"><button class="btn primary" id="wiPickSave">加入</button></div>
-  </div>
-</dialog>
+
 
 <!-- Work-record batches dialog -->
-<dialog id="batchDlg" style="width:min(720px,calc(100vw - 24px))">
+<dialog id="batchDlg" style="width:min(940px,calc(100vw - 24px))">
   <div class="dlg">
     <div class="dlg-head"><h2 id="batchTitle">製作批次</h2><button class="xbtn" data-close aria-label="關閉"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button></div>
     <div class="note">每做完一批，記下數量和實際花的時數，系統會算出實際平均每單位的時數。可以選對應的工作（選填）：選了之後那項工作會標為完成，數量和時數兩邊會同步。</div>
     <div class="stats" id="batchSum" style="margin:0"></div>
+    <div id="batchProj" class="bproj"></div>
     <div class="tablewrap" id="batchTable"></div>
     <div class="err" id="batchErr"></div>
   </div>
@@ -1192,7 +1217,7 @@ const PICK_COLORS=['#2F6FB2','#5463C2','#3D3D8F','#8A4FB0','#A0446E','#C2507A','
 const NOCOLOR='#8A939B';
 
 const DEFAULT_MS=['一校','二校','出片','上架'];
-let state={projects:[],people:[],tasks:[],overrides:[],todos:[],settings:{hoursPerDay:8,warnDays:3,msPresets:DEFAULT_MS.slice(),msColors:{},msOther:''}};
+let state={projects:[],people:[],tasks:[],overrides:[],todos:[],workItems:[],workCats:[],settings:{hoursPerDay:8,warnDays:3,msPresets:DEFAULT_MS.slice(),msColors:{},msOther:''}};
 let ov=new Map();
 const ui={view:'timeline',dw:34,viewStart:0,group:'project',filters:{timeline:[],calendar:[]},project:null,sorts:{t:{key:'start',dir:1},m:{key:'date',dir:1},i:{key:'received',dir:1},r:{key:'date',dir:1}},cmonth:null,cmode:'month',cscope:'upcoming',cspan:6,csplit:15,mstart:null,mcount:5,mall:false};
 
@@ -1301,7 +1326,7 @@ const $=id=>document.getElementById(id);
 const DATE_RE=/^\d{4}-\d{2}-\d{2}$/;
 
 function normalize(d){
-  const s={projects:[],people:[],tasks:[],overrides:[],todos:[],settings:{hoursPerDay:8,warnDays:3,msPresets:DEFAULT_MS.slice(),msColors:{},msOther:''}};
+  const s={projects:[],people:[],tasks:[],overrides:[],todos:[],workItems:[],workCats:[],settings:{hoursPerDay:8,warnDays:3,msPresets:DEFAULT_MS.slice(),msColors:{},msOther:''}};
   if(d&&typeof d==='object'){
     const hp=+(d.settings&&d.settings.hoursPerDay);
     if(hp>=1&&hp<=24)s.settings.hoursPerDay=hp;
@@ -1322,8 +1347,7 @@ function normalize(d){
     if(Array.isArray(d.projects))s.projects=d.projects.filter(p=>p&&p.id).map(p=>({...mapPC(p),
       milestones:Array.isArray(p.milestones)?p.milestones.filter(m=>m&&m.id&&DATE_RE.test(m.date)).map(m=>({id:String(m.id),name:String(m.name||'里程碑'),date:m.date,done:!!m.done,important:m.important!==false})).sort((a,b)=>a.date<b.date?-1:1):[],
       units:+p.units>0?+p.units:'',
-      workItems:Array.isArray(p.workItems)?p.workItems.filter(w=>w&&w.id).map(w=>({id:String(w.id),name:String(w.name||'製作品項'),unit:String(w.unit||''),estRate:+w.estRate>0?+w.estRate:0,estQty:+w.estQty>0?+w.estQty:0,
-        batches:Array.isArray(w.batches)?w.batches.filter(b=>b&&b.id).map(b=>({id:String(b.id),date:DATE_RE.test(b.date)?b.date:'',qty:+b.qty>0?+b.qty:0,hours:+b.hours>0?+b.hours:0,note:String(b.note||''),...(b.taskId?{taskId:String(b.taskId)}:{})})):[]})):[],
+      workUse:Array.isArray(p.workUse)?p.workUse.filter(u=>u&&u.wiId).map(u=>({wiId:String(u.wiId),estQty:+u.estQty>0?+u.estQty:0})):[],
       returns:Array.isArray(p.returns)?p.returns.filter(x=>x&&x.id&&DATE_RE.test(x.date)).map(x=>({id:String(x.id),date:x.date,name:String(x.name||''),stage:String(x.stage||''),note:String(x.note||''),taskIds:Array.isArray(x.taskIds)?x.taskIds.map(String):[]})):[],
       intakes:Array.isArray(p.intakes)?p.intakes.filter(x=>x&&x.id).map(x=>({id:String(x.id),name:String(x.name||'進稿項目'),date:DATE_RE.test(x.date)?x.date:'',received:!!x.received,recvDate:DATE_RE.test(x.recvDate)?x.recvDate:'',note:String(x.note||''),taskIds:Array.isArray(x.taskIds)?x.taskIds.map(String):[]})):[]}));
     const mapLeaves=a=>Array.isArray(a)?a.filter(x=>x&&DATE_RE.test(x.date)).map(x=>({date:x.date,part:['am','pm'].includes(x.part)?x.part:'full',label:String(x.label||'')})).sort((a,b)=>a.date<b.date?-1:1):[];
@@ -1334,6 +1358,28 @@ function normalize(d){
       return{id:String(t.id),name:String(t.name||'未命名工作'),projectId:t.projectId?String(t.projectId):'',personId:t.personId?String(t.personId):'',
         start:DATE_RE.test(t.start)?t.start:'',startAt:DATE_RE.test(t.start)&&TIME_RE.test(t.startAt||'')?t.startAt:'',hours:Math.min(9999,Math.max(.5,Math.round(hours*2)/2)),due:DATE_RE.test(t.due)?t.due:'',doneDate:t.done&&DATE_RE.test(t.doneDate)?t.doneDate:'',wiId:t.wiId?String(t.wiId):'',wiQty:+t.wiQty>0?+t.wiQty:0,actualHours:+t.actualHours>0?+t.actualHours:0,note:String(t.note||''),done:!!t.done,preps:Array.isArray(t.preps)?t.preps.filter(x=>x&&String(x.name||'').trim()).map(x=>({id:String(x.id||uid()),name:String(x.name).trim(),done:!!x.done})):[]};
     });
+    /* 工時品項: one shared list (new format) + migration of the old per-project lists, merged by name.
+       The merged item keeps the smallest old id, so two computers migrating the same data get the same ids. */
+    const mapB=(b,pid)=>({id:String(b.id),date:DATE_RE.test(b.date)?b.date:'',qty:+b.qty>0?+b.qty:0,hours:+b.hours>0?+b.hours:0,note:String(b.note||''),...(b.taskId?{taskId:String(b.taskId)}:{}),...(pid?{projectId:pid}:{})});
+    if(Array.isArray(d.workCats))s.workCats=d.workCats.filter(c=>c&&c.id).map(c=>({id:String(c.id),name:String(c.name||'分類')}));
+    if(Array.isArray(d.workItems))s.workItems=d.workItems.filter(w=>w&&w.id).map(w=>({id:String(w.id),name:String(w.name||'製作品項').trim()||'製作品項',unit:String(w.unit||''),estRate:+w.estRate>0?+w.estRate:0,cat:String(w.cat||''),
+      batches:Array.isArray(w.batches)?w.batches.filter(b=>b&&b.id).map(b=>mapB(b,b.projectId?String(b.projectId):'')):[]}));
+    const remap=new Map(),legacy=[];
+    if(Array.isArray(d.projects))for(const rp of d.projects)if(rp&&rp.id&&Array.isArray(rp.workItems))for(const w of rp.workItems)if(w&&w.id)legacy.push({pid:String(rp.id),w});
+    const lname=w=>String(w.name||'製作品項').trim()||'製作品項';
+    for(const{pid,w}of legacy){
+      const name=lname(w);let g=s.workItems.find(x=>x.name===name);
+      if(!g){const id=legacy.filter(x=>lname(x.w)===name).map(x=>String(x.w.id)).sort()[0];g={id,name,unit:'',estRate:0,cat:'',batches:[]};s.workItems.push(g)}
+      remap.set(String(w.id),g.id);
+      if(!g.unit&&w.unit)g.unit=String(w.unit);if(!(g.estRate>0)&&+w.estRate>0)g.estRate=+w.estRate;
+      for(const b of (Array.isArray(w.batches)?w.batches:[])){if(!b||!b.id)continue;const mb=mapB(b,pid);
+        if(!g.batches.some(x=>x.id===mb.id||((x.projectId||'')===pid&&x.date===mb.date&&x.qty===mb.qty&&x.hours===mb.hours&&x.note===mb.note)))g.batches.push(mb)}
+      const sp=s.projects.find(x=>x.id===pid);if(sp){const u=sp.workUse.find(x=>x.wiId===g.id);if(u){if(!(u.estQty>0)&&+w.estQty>0)u.estQty=+w.estQty}else sp.workUse.push({wiId:g.id,estQty:+w.estQty>0?+w.estQty:0})}
+    }
+    const catIds=new Set(s.workCats.map(c=>c.id)),wiIds=new Set(s.workItems.map(w=>w.id));
+    for(const w of s.workItems)if(!catIds.has(w.cat))w.cat='';
+    for(const pp of s.projects)pp.workUse=pp.workUse.filter((u,i,a)=>wiIds.has(u.wiId)&&a.findIndex(x=>x.wiId===u.wiId)===i);
+    for(const t of s.tasks){if(remap.has(t.wiId))t.wiId=remap.get(t.wiId);if(t.wiId&&!wiIds.has(t.wiId)){t.wiId='';t.wiQty=0}}
     if(Array.isArray(d.todos))s.todos=d.todos.filter(x=>x&&x.id&&DATE_RE.test(x.date)&&String(x.title||'').trim()).map(x=>({id:String(x.id),date:x.date,time:TIME_RE.test(x.time||'')?x.time:'',title:String(x.title).trim(),note:String(x.note||''),done:!!x.done}));
     if(d.settings&&typeof d.settings.me==='string')s.settings.me=d.settings.me;
     if(Array.isArray(d.overrides))s.overrides=d.overrides.filter(o=>o&&DATE_RE.test(o.date)&&(o.type==='off'||o.type==='work')).map(o=>({date:o.date,type:o.type,label:String(o.label||'')}));
@@ -1386,19 +1432,20 @@ function backStart(t,dueKey){
   return toK(n);
 }
 /* a finished task that is linked to a 工時品項 (with quantity and actual hours) owns exactly one batch in that item */
-function taskWI(t){const p=projectById(t.projectId);return p&&(p.workItems||[]).find(w=>w.id===t.wiId)||null}
+function taskWI(t){return t.wiId&&(state.workItems||[]).find(w=>w.id===t.wiId)||null}
 function syncWork(){
   const linked=new Map();
-  for(const p of state.projects)for(const w of (p.workItems||[]))for(const b of w.batches)if(b.taskId)linked.set(b.taskId,{w,b});
+  for(const w of state.workItems||[])for(const b of w.batches)if(b.taskId)linked.set(b.taskId,{w,b});
   for(const [tid,x] of linked){if(!state.tasks.some(t=>t.id===tid)){delete x.b.taskId;linked.delete(tid)}}  // task deleted: keep the record as a manual batch
   for(const t of state.tasks){
     const w=taskWI(t),want=t.done&&w&&t.wiQty>0&&t.actualHours>0,cur=linked.get(t.id);
     if(cur&&(!want||cur.w!==w)){cur.w.batches=cur.w.batches.filter(b=>b!==cur.b);linked.delete(t.id)}
     if(want){const c=linked.get(t.id);
-      if(c){c.b.qty=t.wiQty;c.b.hours=t.actualHours;if(t.doneDate)c.b.date=t.doneDate}
-      else{const same=w.batches.find(b=>!b.taskId&&b.qty===t.wiQty&&b.hours===t.actualHours&&b.note===t.name);
+      const pj=projectById(t.projectId)?t.projectId:'';
+      if(c){c.b.qty=t.wiQty;c.b.hours=t.actualHours;if(t.doneDate)c.b.date=t.doneDate;if(pj)c.b.projectId=pj}
+      else{const same=w.batches.find(b=>!b.taskId&&b.qty===t.wiQty&&b.hours===t.actualHours&&b.note===t.name&&(b.projectId||'')===pj);
         if(same){same.taskId=t.id;if(t.doneDate)same.date=t.doneDate}
-        else w.batches.push({id:uid(),date:t.doneDate||toK(todayN()),qty:t.wiQty,hours:t.actualHours,note:t.name,taskId:t.id})}}
+        else w.batches.push({id:uid(),date:t.doneDate||toK(todayN()),qty:t.wiQty,hours:t.actualHours,note:t.name,taskId:t.id,...(pj?{projectId:pj}:{})})}}
   }
 }
 function askActual(t,wasDone){
@@ -1566,12 +1613,15 @@ var lastSnap=null;
 function entKeys(st){
   const m=new Map(),put=(k,o,omit)=>{const c={...o};if(omit)for(const f of omit)delete c[f];m.set(k,JSON.stringify(c))};
   for(const p of st.projects||[]){
-    put('p:'+p.id,p,['milestones','intakes','returns','workItems']);
+    put('p:'+p.id,p,['milestones','intakes','returns','workItems','workUse']);
+    for(const x of p.workUse||[])put('u:'+p.id+'|'+x.wiId,{...x,_pid:p.id});
     for(const x of p.milestones||[])put('m:'+x.id,{...x,_pid:p.id});
     for(const x of p.intakes||[])put('i:'+x.id,{...x,_pid:p.id});
     for(const x of p.returns||[])put('r:'+x.id,{...x,_pid:p.id});
-    for(const w of p.workItems||[]){put('w:'+w.id,{...w,_pid:p.id},['batches']);for(const b of w.batches||[])put('b:'+b.id,{...b,_wid:w.id})}
   }
+  for(const w of st.workItems||[]){put('w:'+w.id,w,['batches']);for(const b of w.batches||[])put('b:'+b.id,{...b,_wid:w.id})}
+  for(const c of st.workCats||[])put('c:'+c.id,c);
+  m.set('corder',JSON.stringify((st.workCats||[]).map(c=>c.id)));
   for(const x of st.people||[])put('h:'+x.id,x);
   for(const x of st.tasks||[])put('t:'+x.id,x);
   for(const x of st.overrides||[])put('o:'+x.date,x);
@@ -1607,17 +1657,20 @@ function mergeState(L,R){
   const ord=JSON.parse(JSON.stringify(((Rm.t.order||0)>(Lm.t.order||0)?R:L).projects||[])).map(p=>p.id);
   projects.sort((a,b)=>{const ia=ord.indexOf(a.id),ib=ord.indexOf(b.id);return (ia<0?1e9:ia)-(ib<0?1e9:ib)});
   const byId=new Map(projects.map(p=>[p.id,p]));
-  for(const p of projects){p.milestones=[];p.intakes=[];p.returns=[];p.workItems=[]}
+  for(const p of projects){p.milestones=[];p.intakes=[];p.returns=[];p.workUse=[];delete p.workItems}
   const kids=(st,f)=>(st.projects||[]).flatMap(p=>(p[f]||[]).map(x=>({...x,_pid:p.id})));
-  const wids=new Map();
-  for(const [f,pre] of [['milestones','m:'],['intakes','i:'],['returns','r:'],['workItems','w:']]){
-    for(const x of mergeBy(kids(L,f),kids(R,f),x=>pre+x.id)){const p=byId.get(x._pid);delete x._pid;if(!p)continue;if(f==='workItems'){x.batches=[];wids.set(x.id,x)}p[f].push(x)}
+  for(const [f,pre] of [['milestones','m:'],['intakes','i:'],['returns','r:']]){
+    for(const x of mergeBy(kids(L,f),kids(R,f),x=>pre+x.id)){const p=byId.get(x._pid);delete x._pid;if(!p)continue;p[f].push(x)}
   }
-  const bat=st=>(st.projects||[]).flatMap(p=>(p.workItems||[]).flatMap(w=>(w.batches||[]).map(b=>({...b,_wid:w.id}))));
+  for(const x of mergeBy(kids(L,'workUse'),kids(R,'workUse'),x=>'u:'+x._pid+'|'+x.wiId)){const p=byId.get(x._pid);delete x._pid;if(p)p.workUse.push(x)}
+  const workItems=mergeBy(L.workItems||[],R.workItems||[],w=>'w:'+w.id);workItems.forEach(w=>{w.batches=[]});const wids=new Map(workItems.map(w=>[w.id,w]));
+  const bat=st=>(st.workItems||[]).flatMap(w=>(w.batches||[]).map(b=>({...b,_wid:w.id})));
   for(const b of mergeBy(bat(L),bat(R),b=>'b:'+b.id)){const w=wids.get(b._wid);delete b._wid;if(w)w.batches.push(b)}
+  const workCats=mergeBy(L.workCats||[],R.workCats||[],c=>'c:'+c.id);
+  {const co=(((Rm.t.corder||0)>(Lm.t.corder||0)?R:L).workCats||[]).map(c=>c.id);workCats.sort((a,b)=>{const ia=co.indexOf(a.id),ib=co.indexOf(b.id);return (ia<0?1e9:ia)-(ib<0?1e9:ib)})}
   for(const p of projects)p.milestones.sort((a,b)=>a.date<b.date?-1:1);
   const settings=JSON.parse(JSON.stringify((Rm.t.s||0)>(Lm.t.s||0)?R.settings:L.settings));
-  return {...L,projects,settings,
+  return {...L,projects,settings,workItems,workCats,
     people:mergeBy(L.people||[],R.people||[],x=>'h:'+x.id),
     tasks:mergeBy(L.tasks||[],R.tasks||[],x=>'t:'+x.id),
     overrides:mergeBy(L.overrides||[],R.overrides||[],x=>'o:'+x.date),
@@ -1936,7 +1989,26 @@ function projStats(ts){
   return{total,done,s,e};
 }
 let lastShownProject=undefined;
+/* re-drawing the project page keeps the scroll position and the keyboard focus.
+   When a field's change (fired as the user leaves it with Tab or a click) triggers the redraw, wait until focus has
+   moved to the next field so it can be put back there afterwards. */
+let rpPending=false;
 function renderProjects(){
+  const ev=window.event,det=$('pdetail'),ae=document.activeElement;
+  const tg=ev&&ev.target;
+  if(ev&&ev.type==='change'&&tg&&tg.nodeType===1&&det.contains(tg)&&!tg.matches('input[type=checkbox],select')){
+    if(rpPending)return;rpPending=true;
+    setTimeout(()=>{rpPending=false;const k=focusKey(document.activeElement),inDet=det.contains(document.activeElement);renderProjectsNow();if(inDet&&k&&!det.contains(document.activeElement))refocus(k)},0);return;
+  }
+  const k=ae&&det.contains(ae)?focusKey(ae):null;
+  renderProjectsNow();
+  if(k&&!det.contains(document.activeElement))refocus(k);
+}
+function renderProjectsNow(){
+  const det0=$('pdetail'),st0=det0.scrollTop,pv0=$('pview').scrollTop,proj0=ui.project;
+  try{renderProjectsBody()}finally{if(ui.project===proj0&&lastShownProject===proj0){det0.scrollTop=st0;$('pview').scrollTop=pv0}}
+}
+function renderProjectsBody(){
   const items=state.projects.map(p=>({id:p.id,name:p.name,color:p.color,ts:state.tasks.filter(t=>t.projectId===p.id)}));
   const orphan=state.tasks.filter(t=>!projectById(t.projectId));
   if(orphan.length)items.push({id:'',name:'未分類',color:NOCOLOR,ts:orphan});
@@ -1992,7 +2064,7 @@ function renderProjects(){
       <tfoot><tr>${oc.map(c=>c.foot||'<td></td>').join('')}${actionFoot}</tr></tfoot>
     </table></div>`;
   };
-  const colBtn=tk=>{const cw=colWs()[tk],custom=Array.isArray(colOrders()[tk])||(cw&&Object.keys(cw).length);
+  const colBtn=tk=>{const cw=colWs()[tk],rg=tk==='t'&&colWs().rg,custom=Array.isArray(colOrders()[tk])||(cw&&Object.keys(cw).length)||(rg&&Object.keys(rg).length);
     return `<span class="colbtn colctl" data-colctl="${tk}">${custom?`<button class="btn sm" data-colreset="${tk}" title="欄位順序和欄寬恢復成預設">恢復預設欄位</button>`:''}</span>`};
   const STAR='<svg viewBox="0 0 16 16"><path d="M8 1.6l1.95 4.1 4.45.55-3.28 3.07.84 4.42L8 11.6l-3.96 2.14.84-4.42L1.6 6.25l4.45-.55z"/></svg>';
   const msCols=[
@@ -2089,8 +2161,8 @@ function renderProjects(){
       const cnt=rtCols.find(c=>c.k==='count').td(r,ctx).replace(/^<td[^>]*>|<\/td>$/g,'');
       body+=`<tr class="rgrp" data-rid="${esc(r.id)}" data-grp="${esc(r.id)}"><td colspan="${N}"><div class="rgrp-in">
         <span class="rg-tag">回檔</span><input type="date" data-rf="date" value="${r.date}" aria-label="回檔日期">
-        <input class="rg-name" data-rf="name" value="${esc(r.name)}" placeholder="${esc(retLabel(p,{...r,name:''}))}" aria-label="回檔名稱">
-        <select data-rf="stage" aria-label="對應里程碑">${stageOpts(r.stage)}</select>
+        <span class="rgw" data-rgk="name"><input class="rg-name" data-rf="name" value="${esc(r.name)}" placeholder="${esc(retLabel(p,{...r,name:''}))}" aria-label="回檔名稱"><span class="rgrs" title="拖曳調整寬度，連點兩下自動符合內容" aria-hidden="true"></span></span>
+        <span class="rgw" data-rgk="stage"><select data-rf="stage" aria-label="對應里程碑">${stageOpts(r.stage)}</select><span class="rgrs" title="拖曳調整寬度，連點兩下自動符合內容" aria-hidden="true"></span></span>
         ${cnt}<span class="rg-st">${st}</span><span class="spacer"></span>
         <button class="btn sm backbtn" data-rback="${esc(r.id)}" title="把這批未完成的工作，依各自時數與製作人員的上班日，往回推算開工日">倒推開工</button> <button class="btn sm danger" data-rmret="${esc(r.id)}">刪除</button>
       </div></td></tr>`+(kids.length?kids.map(t=>taskRow(t,r.id)).join(''):`<tr class="rchild" data-grp="${esc(r.id)}"><td colspan="${N}" class="muted" style="padding:6px 14px 8px 34px;font-size:13px">還沒有工作：按上方「＋ 選擇工作」，或把下面的工作拖進來。</td></tr>`);
@@ -2148,17 +2220,20 @@ function freezeCols(tb,W){const tk=tb.dataset.tk,o=W[tk]=W[tk]||{};
     o[k]=Math.max(40,Math.round(w))})}
 function applyColW(){
   const W=colWLive||colWs();let css='';
-  document.querySelectorAll('#pdetail table[data-tk]').forEach(tb=>{
+  const done=new Set();
+  document.querySelectorAll('#pdetail table[data-tk],#rBody table[data-tk]').forEach(tb=>{
     const tk=tb.dataset.tk,ths=[...tb.querySelectorAll('thead th')],o=W[tk];
     ths.forEach(h=>{if(h.dataset.ck&&!h.querySelector('.colrs'))h.insertAdjacentHTML('beforeend','<span class="colrs" title="拖曳調整欄寬，連點兩下自動符合內容" aria-hidden="true"></span>')});
-    if(!o||!Object.keys(o).length)return;
+    if(!o||!Object.keys(o).length||done.has(tk))return;done.add(tk);
     let sum=0;
     ths.forEach((h,i)=>{const w=o[colKey(h)]>0?o[colKey(h)]:(h.dataset.ck?120:150);sum+=w;
-      css+=`#pdetail table[data-tk="${tk}"] tr:not(.rgrp):not(.rt-add)>:nth-child(${i+1}):not([colspan]){width:${w}px!important;min-width:0!important;max-width:none}`});
-    css+=`#pdetail table[data-tk="${tk}"]{table-layout:fixed;width:${sum}px!important;min-width:0!important}#pdetail table[data-tk="${tk}"] td:not(:last-child){overflow:hidden}#pdetail table[data-tk="${tk}"] td input:not([type=checkbox]),#pdetail table[data-tk="${tk}"] td select{max-width:100%}`;
+      css+=`table[data-tk="${tk}"] tr:not(.rgrp):not(.rt-add)>:nth-child(${i+1}):not([colspan]){width:${w}px!important;min-width:0!important;max-width:none}`});
+    css+=`table[data-tk="${tk}"]{table-layout:fixed;width:${sum}px!important;min-width:0!important}table[data-tk="${tk}"] col{width:auto!important}table[data-tk="${tk}"] tr:not(.rgrp):not(.rt-add)>td:not(:last-child){overflow:hidden}table[data-tk="${tk}"] tr:not(.rgrp):not(.rt-add)>td input:not([type=checkbox]),table[data-tk="${tk}"] tr:not(.rgrp):not(.rt-add)>td select{max-width:100%}`;
   });
   let st=document.getElementById('colwStyle');if(!st){st=document.createElement('style');st.id='colwStyle';document.head.appendChild(st)}
+  const rg=W.rg||{};for(const k of ['name','stage'])if(rg[k]>0)css+=`#pdetail .mg-t .rgw[data-rgk="${k}"]{width:${rg[k]}px;min-width:0;max-width:none;flex:none}`;
   st.textContent=css;
+  document.querySelectorAll('#pdetail .mg-t').forEach(t=>{const w=t.closest('.tablewrap');if(w)t.style.setProperty('--mgw',Math.max(300,w.clientWidth-20)+'px')});
 }
 let colRs=null;
 document.addEventListener('pointerdown',e=>{
@@ -2174,6 +2249,19 @@ document.addEventListener('pointermove',e=>{
 });
 document.addEventListener('pointerup',()=>{if(!colRs)return;colRs=null;document.body.classList.remove('colresizing');
   try{localStorage.setItem('prod-schedule-colw',JSON.stringify(colWLive))}catch(_){}colWLive=null;applyColW()});
+/* 回檔 rows in the 整合顯示 table: drag the right edge of the name / milestone box to resize it (same width for every 回檔) */
+let rgRs=null;
+document.addEventListener('pointerdown',e=>{
+  const h=e.target.closest&&e.target.closest('.rgrs');if(!h||e.button!==0)return;e.preventDefault();e.stopPropagation();
+  const box=h.closest('.rgw');rgRs={k:box.dataset.rgk,x:e.clientX,w:box.getBoundingClientRect().width};colWLive=colWs();document.body.classList.add('colresizing');
+},true);
+document.addEventListener('pointermove',e=>{if(!rgRs)return;if(Math.abs(e.clientX-rgRs.x)>2)rgRs.moved=true;(colWLive.rg=colWLive.rg||{})[rgRs.k]=Math.round(Math.max(60,Math.min(900,rgRs.w+e.clientX-rgRs.x)));applyColW()});
+document.addEventListener('pointerup',()=>{if(!rgRs)return;const mv=rgRs.moved;rgRs=null;document.body.classList.remove('colresizing');if(mv)try{localStorage.setItem('prod-schedule-colw',JSON.stringify(colWLive))}catch(_){}colWLive=null;if(mv)renderProjects();else applyColW()});
+document.addEventListener('dblclick',e=>{const h=e.target.closest&&e.target.closest('.rgrs');if(!h)return;e.stopPropagation();
+  const k=h.closest('.rgw').dataset.rgk;let m=0;
+  for(const b of document.querySelectorAll(`#pdetail .mg-t .rgw[data-rgk="${k}"]`)){const c=b.querySelector('input,select');if(!c)continue;
+    m=Math.max(m,c.tagName==='SELECT'?textW((c.options[c.selectedIndex]||{}).text||'',c)+40:textW(c.value||c.placeholder,c)+26)}
+  const W=colWs();(W.rg=W.rg||{})[k]=Math.round(Math.max(60,Math.min(900,m)));try{localStorage.setItem('prod-schedule-colw',JSON.stringify(W))}catch(_){}renderProjects()},true);
 /* double-click the edge: fit the column to its widest content */
 let measureCtx=null;
 function textW(str,el){str=str||'';try{if(measureCtx===null)measureCtx=document.createElement('canvas').getContext('2d')||false}catch(_){measureCtx=false}
@@ -2196,13 +2284,13 @@ function contentW(el){
 }
 function autoFitCol(tb,i){
   let m=0;
-  for(const tr of tb.querySelectorAll('tr:not(.rgrp):not(.rt-add)')){const c=tr.children[i];if(!c||c.hasAttribute('colspan'))continue;m=Math.max(m,contentW(c)+(c.tagName==='TH'?28:18))}
+  for(const tr of document.querySelectorAll(`table[data-tk="${tb.dataset.tk}"] tr:not(.rgrp):not(.rt-add)`)){const c=tr.children[i];if(!c||c.hasAttribute('colspan'))continue;m=Math.max(m,contentW(c)+(c.tagName==='TH'?28:18))}
   return Math.round(Math.max(48,Math.min(900,m)));
 }
 document.addEventListener('dblclick',e=>{const h=e.target.closest&&e.target.closest('.colrs');if(!h)return;
   const th=h.closest('th'),tb=th.closest('table'),tk=tb.dataset.tk,W=colWs();
   const fit=autoFitCol(tb,[...th.parentNode.children].indexOf(th));freezeCols(tb,W);W[tk][th.dataset.ck]=fit;
-  try{localStorage.setItem('prod-schedule-colw',JSON.stringify(W))}catch(_){}applyColW();renderProjects()});
+  try{localStorage.setItem('prod-schedule-colw',JSON.stringify(W))}catch(_){}applyColW();if(ui.view==='records')renderRecords();else renderProjects()});
 /* drag a header left/right to move the column */
 let colMv=null,colMvClick=false;
 document.addEventListener('pointerdown',e=>{
@@ -2623,173 +2711,233 @@ function myDragEnd(apply){const d=myDrag;myDrag=null;if(!d)return;if(d.ghost)d.g
 document.addEventListener('pointerup',()=>myDragEnd(true));
 document.addEventListener('pointercancel',()=>myDragEnd(false));
 
-/* ---------- 工時紀錄: estimated vs actual hours per 製作品項, kept for future estimates ---------- */
+/* ---------- 工時紀錄: 工時品項 are shared by all projects (grouped by 分類); each project keeps its own estimate (workUse) ---------- */
 const f2=v=>{if(!isFinite(v))return'—';const r=Math.round(v*100)/100;return String(r)};
 const f1=v=>isFinite(v)?String(Math.round(v*10)/10):'—';
-function wiActual(w){const q=w.batches.reduce((a,b)=>a+b.qty,0),h=w.batches.reduce((a,b)=>a+b.hours,0);return{q,h,avg:q>0?h/q:NaN}}
-/* history across projects, keyed by item name */
+/* actual totals of an item; pid limits to one project's batches */
+function wiActual(w,pid){const bs=pid===undefined?w.batches:w.batches.filter(b=>(b.projectId||'')===pid);const q=bs.reduce((a,b)=>a+b.qty,0),h=bs.reduce((a,b)=>a+b.hours,0);return{q,h,avg:q>0?h/q:NaN,n:bs.length}}
+const wiById=id=>(state.workItems||[]).find(w=>w.id===id)||null;
+const catById=id=>(state.workCats||[]).find(c=>c.id===id)||null;
+/* stats keyed by item name (kept for older callers) */
 function itemStats(exceptProjectId){
   const m=new Map();
-  for(const p of state.projects)for(const w of (p.workItems||[])){
-    if(p.id===exceptProjectId)continue;
-    const k=w.name.trim();if(!k)continue;
-    if(!m.has(k))m.set(k,{name:k,unit:w.unit,q:0,h:0,est:[],per:[]});
-    const g=m.get(k),a=wiActual(w);
-    if(!g.unit&&w.unit)g.unit=w.unit;
-    g.q+=a.q;g.h+=a.h;if(w.estRate>0)g.est.push(w.estRate);
-    g.per.push({p,w,avg:a.avg,q:a.q});
+  for(const w of state.workItems||[]){
+    const bs=w.batches.filter(b=>!exceptProjectId||(b.projectId||'')!==exceptProjectId),q=bs.reduce((a,b)=>a+b.qty,0),h=bs.reduce((a,b)=>a+b.hours,0);
+    m.set(w.name,{name:w.name,unit:w.unit,q,h,avg:q>0?h/q:NaN,estAvg:w.estRate>0?w.estRate:NaN,est:w.estRate>0?[w.estRate]:[],per:[]});
   }
-  for(const g of m.values()){g.avg=g.q>0?g.h/g.q:NaN;g.estAvg=g.est.length?g.est.reduce((a,b)=>a+b,0)/g.est.length:NaN;
-    const avgs=g.per.map(x=>x.avg).filter(isFinite);g.min=avgs.length?Math.min(...avgs):NaN;g.max=avgs.length?Math.max(...avgs):NaN}
   return m;
 }
-/* put a 製作品項 that other projects already use into project p (or return the one it has) */
-function ensureWorkItem(p,name){
-  p.workItems=p.workItems||[];name=name.trim();
-  let w=p.workItems.find(x=>x.name.trim()===name);if(w)return w;
-  const g=itemStats(p.id).get(name),r=g?(isFinite(g.avg)?g.avg:isFinite(g.estAvg)?g.estAvg:0):0;
-  w={id:uid(),name,unit:g&&g.unit||'',estRate:Math.round(r*100)/100,estQty:0,batches:[]};p.workItems.push(w);return w;
+function itemNameList(){return (state.workItems||[]).map(w=>w.name).sort((a,b)=>NAT.compare(a,b))}
+/* a project lists the items it uses (with its own estimated quantity) */
+function useItem(p,wid){if(!p||!wid)return;p.workUse=p.workUse||[];if(!p.workUse.some(u=>u.wiId===wid))p.workUse.push({wiId:wid,estQty:0})}
+/* <option>s of all items, grouped by 分類 */
+function wiOptions(sel,skip){
+  skip=skip||new Set();const ws=(state.workItems||[]).filter(w=>!skip.has(w.id)),cats=state.workCats||[];
+  const grp=(label,list)=>list.length?`<optgroup label="${esc(label)}">${list.sort((a,b)=>NAT.compare(a.name,b.name)).map(w=>`<option value="${esc(w.id)}"${w.id===sel?' selected':''}>${esc(w.name)}${w.unit?'（'+esc(w.unit)+'）':''}</option>`).join('')}</optgroup>`:'';
+  return cats.map(c=>grp(c.name,ws.filter(w=>w.cat===c.id))).join('')+grp(cats.length?'未分類':'工時品項',ws.filter(w=>!catById(w.cat)));
 }
-function itemNameList(){return [...itemStats().keys()].sort((a,b)=>NAT.compare(a,b))}
 function renderRecords(){
-  const mode=ui.rmode||'proj';
+  const mode=ui.rmode||'item';
   $('rModeProj').setAttribute('aria-selected',mode==='proj');$('rModeItem').setAttribute('aria-selected',mode==='item');
   $('rProject').hidden=mode!=='proj';$('rSearch').hidden=mode!=='item';
-  if(mode==='item'){renderItemOverview();return}
+  if(mode==='item'){renderItems();return}
   const sel=$('rProject');
-  if(!state.projects.length){sel.innerHTML='';$('rHint').textContent='';$('rBody').innerHTML='<div class="pempty"><strong>還沒有專案</strong>先到「專案」頁建立專案，就能在這裡記錄每個製作品項的時數。</div>';return}
+  if(!state.projects.length){sel.innerHTML='';$('rHint').textContent='';$('rBody').innerHTML='<div class="pempty"><strong>還沒有專案</strong>先到「專案」頁建立專案，就能在這裡估算每個專案要用的品項和時數。</div>';return}
   if(!ui.rproj||!projectById(ui.rproj))ui.rproj=(projectById(ui.project)?ui.project:state.projects[0].id);
   sel.innerHTML=state.projects.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');sel.value=ui.rproj;
-  const p=projectById(ui.rproj);p.workItems=p.workItems||[];
-  const hist=itemStats(p.id),H=HPD();
-  $('rHint').textContent='預估總時＝預估時數 × 預估數量；預估天數依每日 '+H+' 小時換算。';
-  let tEst=0,tAct=0,tActQ=0;
-  const rows=p.workItems.map(w=>{
-    const est=w.estRate*w.estQty,a=wiActual(w),g=hist.get(w.name.trim());
-    tEst+=est;tAct+=a.h;
-    const diff=isFinite(a.avg)&&w.estRate>0?(a.avg-w.estRate)/w.estRate:NaN;
-    const ref=g&&isFinite(g.avg)?`<span class="ref" title="其他 ${g.per.length} 個專案的實際平均">其他專案 ${f2(g.avg)}</span>`:(g&&isFinite(g.estAvg)?`<span class="ref" title="其他專案的預估平均（尚無實際紀錄）">其他專案預估 ${f2(g.estAvg)}</span>`:'');
-    return `<tr data-wid="${esc(w.id)}">
-      <td><input class="c-name" data-wf="name" value="${esc(w.name)}" aria-label="製作品項"></td>
-      <td><input class="u" data-wf="unit" value="${esc(w.unit)}" placeholder="頁" aria-label="單位"></td>
-      <td class="num"><input class="n" type="number" min="0" step="0.01" data-wf="estRate" value="${w.estRate||''}" aria-label="預估時數（每單位）">${ref}</td>
-      <td class="num"><input class="n" type="number" min="0" step="1" data-wf="estQty" value="${w.estQty||''}" aria-label="預估數量"></td>
+  const p=projectById(ui.rproj);p.workUse=p.workUse||[];const H=HPD();
+  $('rHint').textContent='選這個專案會用到的品項，填預估數量。每單位時數來自「工時品項」；預估天數依每日 '+H+' 小時換算。';
+  let tEst=0,tAct=0;
+  const rows=p.workUse.map(u=>{const w=wiById(u.wiId);if(!w)return'';
+    const est=w.estRate*u.estQty,a=wiActual(w,p.id),all=wiActual(w);tEst+=est;tAct+=a.h;
+    const diff=isFinite(a.avg)&&w.estRate>0?(a.avg-w.estRate)/w.estRate:NaN,c=catById(w.cat);
+    return `<tr data-wuse="${esc(w.id)}">
+      <td><b class="wname">${esc(w.name)}</b>${c?`<span class="ref" style="text-align:left;padding:0">${esc(c.name)}</span>`:''}</td>
+      <td>${esc(w.unit||'')}</td>
+      <td class="num">${f2(w.estRate)}${isFinite(all.avg)?`<span class="ref" title="所有專案的實際平均">全部實際 ${f2(all.avg)}</span>`:''}</td>
+      <td class="num"><input class="n" type="number" min="0" step="1" data-uf="estQty" value="${u.estQty||''}" aria-label="預估數量"></td>
       <td class="num">${f1(est)}</td>
       <td class="num">${f1(est/H)}</td>
       <td class="num">${a.q?f2(a.q):'—'}</td>
       <td class="num">${a.h?f1(a.h):'—'}</td>
       <td class="num"><b>${f2(a.avg)}</b>${isFinite(diff)&&Math.abs(diff)>=.005?`<span class="ref ${diff>0?'diff-up':'diff-down'}">比預估${diff>0?'多':'少'} ${Math.round(Math.abs(diff)*100)}%</span>`:''}</td>
-      <td><button class="lnkbtn${w.batches.length?' has':''}" data-wbatch="${esc(w.id)}">${w.batches.length?w.batches.length+' 批，記錄 ›':'＋ 記錄實際時數'}</button></td>
-      <td style="width:60px"><button class="btn sm danger" data-wrm="${esc(w.id)}">刪除</button></td></tr>`;
-  }).join('');
-  const nameCombo=`<span class="combo"><input id="wiName" placeholder="例如：功能SVG化：課本" autocomplete="off" aria-label="新製作品項"><button type="button" class="cbtn" data-combo-btn data-src="items" aria-label="從其他專案的品項選擇" title="從其他專案的品項選擇"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5 6 7.5 9 4.5"/></svg></button></span>`;
+      <td><button class="lnkbtn${a.n?' has':''}" data-wbatch="${esc(w.id)}" data-wbp="${esc(p.id)}">${a.n?a.n+' 批，記錄 ›':'＋ 記錄實際時數'}</button></td>
+      <td style="width:60px"><button class="btn sm" data-urm="${esc(w.id)}" title="從這個專案移除（品項和紀錄都會保留）">移除</button></td></tr>`}).join('');
+  const used=new Set(p.workUse.map(u=>u.wiId)),opts=wiOptions('',used);
   $('rBody').innerHTML=`
     <div class="rsum">
       <span><b>${f1(tEst)}</b>預估總時（約 <b style="font-size:13px">${f1(tEst/H)}</b> 天）</span>
-      <span><b>${f1(tAct)}</b>已記錄實際時數</span>
+      <span><b>${f1(tAct)}</b>這個專案已記錄的實際時數</span>
       <label class="inline" style="gap:6px">單元數<input type="number" min="0" step="1" id="rUnits" value="${p.units||''}"></label>
-      ${[...hist.keys()].some(n=>!p.workItems.some(w=>w.name.trim()===n))?'<button class="btn sm" id="wiPick" style="margin-left:auto">從其他專案加入品項…</button>':''}
     </div>
     <div class="tablewrap"><table class="tt wr-t">
-      <thead><tr><th>製作品項</th><th>單位</th><th class="num">預估時數<br><small>每單位</small></th><th class="num">預估數量</th><th class="num">預估總時</th><th class="num">預估天數</th><th class="num">實際數量</th><th class="num">實際時數</th><th class="num">實際平均<br><small>每單位</small></th><th>製作批次</th><th></th></tr></thead>
-      <tbody>${rows||'<tr><td colspan="11" class="muted" style="padding:14px">還沒有製作品項。在下面新增，例如「頁面圖文分離＋匯入：課本」，每頁預估 0.1 小時、共 250 頁。</td></tr>'}</tbody>
-      <tfoot><tr><td>${nameCombo}</td><td><input class="u" id="wiUnit" placeholder="頁" aria-label="單位"></td><td class="num"><input class="n" type="number" min="0" step="0.01" id="wiRate" aria-label="預估時數（每單位）"></td><td class="num"><input class="n" type="number" min="0" step="1" id="wiQty" aria-label="預估數量"></td><td colspan="6" class="muted" style="font-size:12px">從 ▾ 選其他專案用過的品項，會自動帶入單位和實際平均時數</td><td><button class="btn primary sm" id="wiAdd">新增</button></td></tr></tfoot>
+      <thead><tr><th>製作品項</th><th>單位</th><th class="num">預估時數<br><small>每單位</small></th><th class="num">預估數量</th><th class="num">預估總時</th><th class="num">預估天數</th><th class="num">本專案<br><small>實際數量</small></th><th class="num">本專案<br><small>實際時數</small></th><th class="num">本專案<br><small>實際平均</small></th><th>製作批次</th><th></th></tr></thead>
+      <tbody>${rows||`<tr><td colspan="11" class="muted" style="padding:14px">這個專案還沒有選品項。在下面選一個品項、填預估數量。${(state.workItems||[]).length?'':'目前還沒有任何品項，請先到「工時品項」新增。'}</td></tr>`}</tbody>
+      <tfoot><tr><td colspan="3">${opts?`<select id="wuItem" aria-label="選擇品項"><option value="">選擇要加入的品項…</option>${opts}</select>`:`<span class="muted" style="font-size:12px">${(state.workItems||[]).length?'所有品項都已加入。':'還沒有品項。'}到「工時品項」可以新增品項。</span>`}</td><td class="num"><input class="n" type="number" min="0" step="1" id="wuQty" aria-label="預估數量"></td><td colspan="6"></td><td><button class="btn primary sm" id="wuAdd">加入</button></td></tr></tfoot>
     </table></div>
     <div class="err" id="wiErr" style="margin-top:8px"></div>`;
 }
-function renderItemOverview(){
-  const q=$('rSearch').value.trim().toLowerCase(),H=HPD();
-  const list=[...itemStats().values()].filter(g=>!q||g.name.toLowerCase().includes(q)).sort((a,b)=>NAT.compare(a.name,b.name));
-  $('rHint').textContent='同名的製作品項會合併計算，可以當作新專案估時的參考。';
-  $('rBody').innerHTML=list.length?`<div class="tablewrap"><table class="tt it-t">
-    <thead><tr><th>製作品項</th><th>單位</th><th class="num">專案數</th><th class="num">實際總數量</th><th class="num">實際總時數</th><th class="num">實際平均<br><small>每單位</small></th><th class="num">各專案範圍</th><th class="num">預估平均<br><small>每單位</small></th><th>專案（實際平均）</th></tr></thead>
-    <tbody>${list.map(g=>`<tr><td>${esc(g.name)}</td><td>${esc(g.unit||'')}</td><td class="num">${g.per.length}</td><td class="num">${g.q?f2(g.q):'—'}</td><td class="num">${g.h?f1(g.h):'—'}</td><td class="num"><b>${f2(g.avg)}</b></td><td class="num">${isFinite(g.min)?(g.min===g.max?f2(g.min):f2(g.min)+' – '+f2(g.max)):'—'}</td><td class="num">${f2(g.estAvg)}</td>
-      <td>${g.per.map(x=>`<button class="pj" data-rgo="${esc(x.p.id)}" title="打開這個專案的工時紀錄" style="background:none;cursor:pointer">${esc(x.p.name)}${isFinite(x.avg)?'　'+f2(x.avg):''}</button>`).join('')}</td></tr>`).join('')}</tbody>
-  </table></div>`:`<div class="pempty"><strong>${q?'找不到符合的品項':'還沒有任何工時紀錄'}</strong>${q?'換個關鍵字試試。':'到「依專案」為專案加入製作品項並記錄每批的時數，這裡就會彙整出各品項的平均時數。'}</div>`;
+let wcatDrag=null;
+function renderItems(){
+  const q=$('rSearch').value.trim().toLowerCase(),cats=state.workCats||[];
+  $('rHint').textContent='品項不分專案，依分類整理；每個品項的批次會記下是哪個專案做的。工作細項裡可以選要記到哪個品項。';
+  const ws=(state.workItems||[]).filter(w=>!q||w.name.toLowerCase().includes(q));
+  const row=w=>{const a=wiActual(w),diff=isFinite(a.avg)&&w.estRate>0?(a.avg-w.estRate)/w.estRate:NaN;
+    return `<tr data-wid="${esc(w.id)}">
+      <td class="wnm"><span class="wigrip" data-widrag="${esc(w.id)}" title="按住拖曳到其他分類" aria-hidden="true">⋮⋮</span><input class="c-name" data-wf="name" value="${esc(w.name)}" aria-label="製作品項"></td>
+      <td><input class="u" data-wf="unit" value="${esc(w.unit)}" placeholder="頁" aria-label="單位"></td>
+      <td class="num"><input class="n" type="number" min="0" step="0.01" data-wf="estRate" value="${w.estRate||''}" aria-label="預估時數（每單位）"></td>
+      <td class="num">${a.q?f2(a.q):'—'}</td>
+      <td class="num">${a.h?f1(a.h):'—'}</td>
+      <td class="num"><b>${f2(a.avg)}</b>${isFinite(diff)&&Math.abs(diff)>=.005?`<span class="ref ${diff>0?'diff-up':'diff-down'}">比預估${diff>0?'多':'少'} ${Math.round(Math.abs(diff)*100)}%</span>`:''}</td>
+      <td><select data-wf="cat" aria-label="分類"><option value="">未分類</option>${cats.map(c=>`<option value="${esc(c.id)}"${c.id===w.cat?' selected':''}>${esc(c.name)}</option>`).join('')}</select></td>
+      <td style="white-space:nowrap"><button class="btn sm" data-wbatch="${esc(w.id)}" title="用在哪些專案、製作批次">詳細${w.batches.length?`（${w.batches.length} 批）`:''}</button> <button class="btn sm danger" data-wrm="${esc(w.id)}">刪除</button></td></tr>`};
+  const section=(c)=>{const id=c?c.id:'',list=ws.filter(w=>c?w.cat===c.id:!catById(w.cat)).sort((a,b)=>NAT.compare(a.name,b.name));
+    if(!c&&!list.length&&!cats.length&&!q)return '';
+    if(q&&!list.length)return '';
+    return `<section class="wcat" data-wcat="${esc(id)}">
+      <div class="wcat-h"${c?` draggable="true"`:''}>${c?'<span class="wgrip" title="拖曳調整分類順序" aria-hidden="true">⋮⋮</span>':''}
+        ${c?`<input class="wcat-name" data-catname="${esc(id)}" value="${esc(c.name)}" aria-label="分類名稱">`:`<b>${cats.length?'未分類':'工時品項'}</b>`}
+        <span class="muted">${list.length} 個品項</span>
+        ${c?`<button class="btn sm danger" data-catrm="${esc(id)}" style="margin-left:auto">刪除分類</button>`:''}</div>
+      <div class="tablewrap"><table class="tt wr-t wi-t" data-tk="wi"><colgroup><col><col style="width:80px"><col style="width:100px"><col style="width:90px"><col style="width:90px"><col style="width:120px"><col style="width:150px"><col style="width:190px"></colgroup>
+        <thead><tr><th data-ck="name">製作品項</th><th data-ck="unit">單位</th><th class="num" data-ck="rate">預估時數<br><small>每單位</small></th><th class="num" data-ck="q">實際數量</th><th class="num" data-ck="h">實際時數</th><th class="num" data-ck="avg">實際平均<br><small>每單位</small></th><th data-ck="cat">分類</th><th></th></tr></thead>
+        <tbody>${list.map(row).join('')||`<tr><td colspan="8" class="muted" style="padding:10px 12px">${c?'這個分類還沒有品項。':'沒有未分類的品項。'}可以把其他分類的品項拖過來。</td></tr>`}</tbody>
+        <tfoot><tr data-addcat="${esc(id)}"><td><input class="wiNew" placeholder="新品項，例如：功能SVG化：課本" autocomplete="off" aria-label="新製作品項"></td><td><input class="u wiNewU" placeholder="頁" aria-label="單位"></td><td class="num"><input class="n wiNewR" type="number" min="0" step="0.01" aria-label="預估時數（每單位）"></td><td colspan="4"></td><td><button class="btn primary sm" data-wiadd>新增</button></td></tr></tfoot>
+      </table></div></section>`};
+  const wiCustom=colWs().wi&&Object.keys(colWs().wi).length;
+  $('rBody').innerHTML=`<div class="rsum">${wiCustom?'<button class="btn sm" data-colreset="wi" style="order:9;margin-left:auto">恢復預設欄寬</button>':''}<label class="inline" style="gap:6px">新增分類<input id="catNew" placeholder="例如：排版" style="width:160px" autocomplete="off"></label><button class="btn sm" id="catAdd">加入</button>
+      <span class="muted" style="font-size:12px">分類名稱可直接改，拖曳分類標題的 ⋮⋮ 調整順序；拖曳品項前面的 ⋮⋮ 可移到其他分類；拖曳欄位名稱右邊緣可調欄寬。</span></div>
+    ${cats.map(section).join('')}${section(null)}${q&&!ws.length?'<div class="pempty"><strong>找不到符合的品項</strong>換個關鍵字試試。</div>':''}
+    <div class="err" id="wiErr" style="margin-top:8px"></div>`;
+  applyColW();
 }
+/* drag an item (by its ⋮⋮) onto another 分類 */
+let wiDrag=null;
+document.addEventListener('pointerdown',e=>{const g=e.target.closest&&e.target.closest('[data-widrag]');if(!g||e.button!==0)return;e.preventDefault();
+  wiDrag={id:g.dataset.widrag,from:g.closest('.wcat').dataset.wcat,x:e.clientX,y:e.clientY,moved:false,ghost:null,to:null}});
+document.addEventListener('pointermove',e=>{
+  if(!wiDrag)return;
+  if(!wiDrag.moved){if(Math.abs(e.clientX-wiDrag.x)+Math.abs(e.clientY-wiDrag.y)<5)return;wiDrag.moved=true;document.body.classList.add('rdragging');
+    const w=wiById(wiDrag.id),gh=document.createElement('div');gh.className='rghost';gh.textContent=w?w.name:'';document.body.appendChild(gh);wiDrag.ghost=gh;
+    const tr=document.querySelector(`tr[data-wid="${CSS.escape(wiDrag.id)}"]`);if(tr)tr.classList.add('rdragsrc')}
+  wiDrag.ghost.style.left=(e.clientX+12)+'px';wiDrag.ghost.style.top=(e.clientY+8)+'px';
+  const el=document.elementFromPoint(e.clientX,e.clientY),sec=el&&el.closest&&el.closest('.wcat'),to=sec?sec.dataset.wcat:null;
+  if(to!==wiDrag.to){wiDrag.to=to;document.querySelectorAll('.wcat.widrop').forEach(x=>x.classList.remove('widrop'));if(sec&&to!==wiDrag.from)sec.classList.add('widrop')}
+});
+function wiDragEnd(apply){const d=wiDrag;wiDrag=null;if(!d)return;if(d.ghost)d.ghost.remove();document.body.classList.remove('rdragging');
+  document.querySelectorAll('.wcat.widrop').forEach(x=>x.classList.remove('widrop'));document.querySelectorAll('.rdragsrc').forEach(x=>x.classList.remove('rdragsrc'));
+  if(!apply||!d.moved||d.to===null||d.to===d.from)return;const w=wiById(d.id);if(!w)return;w.cat=d.to;const c=catById(d.to);
+  save();renderRecords();toast(`「${w.name}」已移到「${c?c.name:'未分類'}」。`)}
+document.addEventListener('pointerup',()=>wiDragEnd(true));
+document.addEventListener('pointercancel',()=>wiDragEnd(false));
 $('rModeProj').onclick=()=>{ui.rmode='proj';renderRecords()};
 $('rModeItem').onclick=()=>{ui.rmode='item';renderRecords()};
-$('rSearch').oninput=()=>renderItemOverview();
+$('rSearch').oninput=()=>renderItems();
 $('rProject').onchange=e=>{ui.rproj=e.target.value;renderRecords();$('rview').scrollTop=0};
-function openWiPick(){
-  const p=projectById(ui.rproj);if(!p)return;
-  const own=new Set((p.workItems||[]).map(w=>w.name.trim())),hist=itemStats(p.id);
-  const list=[...hist.values()].filter(g=>!own.has(g.name)).sort((a,b)=>NAT.compare(a.name,b.name));
-  $('wiPickList').innerHTML=list.map(g=>{const r=isFinite(g.avg)?`實際平均 ${f2(g.avg)}`:isFinite(g.estAvg)?`預估平均 ${f2(g.estAvg)}`:'';
-    return `<label><input type="checkbox" value="${esc(g.name)}"><span class="cname">${esc(g.name)}</span><span class="muted">${r?r+' 小時／'+esc(g.unit||'單位')+'　':''}${g.per.map(x=>esc(x.p.name)).join('、')}</span></label>`}).join('')||'<div class="emptyli">其他專案的品項這個專案都有了。</div>';
-  $('wiPickDlg').showModal();
+function addWorkItemFrom(tr){
+  const name=tr.querySelector('.wiNew').value.trim();
+  if(!name){$('wiErr').textContent='請輸入製作品項名稱。';tr.querySelector('.wiNew').focus();return}
+  if((state.workItems||[]).some(w=>w.name===name)){$('wiErr').textContent=`已經有「${name}」這個品項了。`;return}
+  const cat=tr.dataset.addcat||'';
+  state.workItems.push({id:uid(),name,unit:tr.querySelector('.wiNewU').value.trim(),estRate:Math.max(0,parseFloat(tr.querySelector('.wiNewR').value)||0),cat,batches:[]});
+  save();renderRecords();const n=document.querySelector(`tr[data-addcat="${CSS.escape(cat)}"] .wiNew`);if(n)n.focus();
 }
-$('wiPickSave').onclick=()=>{
-  const p=projectById(ui.rproj);const names=[...$('wiPickList').querySelectorAll('input:checked')].map(i=>i.value);
-  if(p&&names.length){names.forEach(n=>ensureWorkItem(p,n));save();renderRecords();toast(`已加入 ${names.length} 個品項。`)}
-  $('wiPickDlg').close();
-};
-function addWorkItem(){
-  const p=projectById(ui.rproj);if(!p)return;
-  const name=$('wiName').value.trim();
-  if(!name){$('wiErr').textContent='請輸入製作品項名稱。';$('wiName').focus();return}
-  p.workItems=p.workItems||[];
-  p.workItems.push({id:uid(),name,unit:$('wiUnit').value.trim(),estRate:Math.max(0,parseFloat($('wiRate').value)||0),estQty:Math.max(0,parseFloat($('wiQty').value)||0),batches:[]});
-  save();renderRecords();const n=$('wiName');if(n)n.focus();
+function addCat(){const i=$('catNew'),v=i.value.trim();if(!v)return;if(state.workCats.some(c=>c.name===v)){$('wiErr').textContent=`已經有「${v}」這個分類了。`;return}
+  state.workCats.push({id:uid(),name:v});save();renderRecords();$('catNew').focus()}
+function addUse(){
+  const p=projectById(ui.rproj),wid=$('wuItem')&&$('wuItem').value;if(!p)return;
+  if(!wid){$('wiErr').textContent='請選擇要加入的品項。';return}
+  useItem(p,wid);const u=p.workUse.find(x=>x.wiId===wid);u.estQty=Math.max(0,parseFloat($('wuQty').value)||0);
+  save();renderRecords();const s=$('wuItem');if(s)s.focus();
 }
 $('rBody').addEventListener('click',async e=>{
   const t=e.target;
-  if(t.closest('#wiAdd')){addWorkItem();return}
-  if(t.closest('#wiPick')){openWiPick();return}
+  if(t.closest('[data-wiadd]')){addWorkItemFrom(t.closest('tr'));return}
+  const cwr=t.closest('[data-colreset]');if(cwr){const W=colWs();delete W.wi;try{localStorage.setItem('prod-schedule-colw',JSON.stringify(W))}catch(_){}renderRecords();return}
+  if(t.closest('#catAdd')){addCat();return}
+  if(t.closest('#wuAdd')){addUse();return}
   const go=t.closest('[data-rgo]');if(go){ui.rproj=go.dataset.rgo;ui.rmode='proj';renderRecords();return}
-  const b=t.closest('[data-wbatch]');if(b){openBatches(ui.rproj,b.dataset.wbatch);return}
+  const b=t.closest('[data-wbatch]');if(b){openBatches(b.dataset.wbatch,b.dataset.wbp);return}
+  const ur=t.closest('[data-urm]');if(ur){const p=projectById(ui.rproj);p.workUse=(p.workUse||[]).filter(u=>u.wiId!==ur.dataset.urm);save();renderRecords();return}
+  const cr=t.closest('[data-catrm]');
+  if(cr){const c=catById(cr.dataset.catrm);if(!c)return;const n=state.workItems.filter(w=>w.cat===c.id).length;
+    if(!await ask(`刪除分類「${c.name}」？${n?`裡面的 ${n} 個品項會移到「未分類」。`:''}`))return;
+    state.workItems.forEach(w=>{if(w.cat===c.id)w.cat=''});state.workCats=state.workCats.filter(x=>x!==c);save();renderRecords();return}
   const rm=t.closest('[data-wrm]');
-  if(rm){const p=projectById(ui.rproj),w=p.workItems.find(x=>x.id===rm.dataset.wrm);if(!await ask(`刪除製作品項「${w.name}」${w.batches.length?`和它的 ${w.batches.length} 筆批次紀錄`:''}？`))return;p.workItems=p.workItems.filter(x=>x!==w);save();renderRecords()}
+  if(rm){const w=wiById(rm.dataset.wrm);if(!w)return;const nt=state.tasks.filter(x=>x.wiId===w.id).length;
+    if(!await ask(`刪除製作品項「${w.name}」${w.batches.length?`和它的 ${w.batches.length} 筆批次紀錄`:''}？${nt?`\n有 ${nt} 項工作連到這個品項，會改成不記錄。`:''}`))return;
+    state.workItems=state.workItems.filter(x=>x!==w);state.tasks.forEach(x=>{if(x.wiId===w.id){x.wiId='';x.wiQty=0}});state.projects.forEach(p=>{p.workUse=(p.workUse||[]).filter(u=>u.wiId!==w.id)});save();renderRecords()}
 });
 $('rBody').addEventListener('change',e=>{
-  const el=e.target,p=projectById(ui.rproj);if(!p)return;
-  if(el.id==='rUnits'){p.units=+el.value>0?Math.round(+el.value):'';save();return}
-  if(el.id==='wiName'){ // fill from history
-    const g=itemStats(p.id).get(el.value.trim());
-    if(g){if(!$('wiUnit').value&&g.unit)$('wiUnit').value=g.unit;if(!$('wiRate').value){const r=isFinite(g.avg)?g.avg:g.estAvg;if(isFinite(r))$('wiRate').value=Math.round(r*100)/100}}
-    return;
-  }
+  const el=e.target;
+  if(el.id==='rUnits'){const p=projectById(ui.rproj);if(p){p.units=+el.value>0?Math.round(+el.value):'';save()}return}
+  if(el.dataset.catname){const c=catById(el.dataset.catname),v=el.value.trim();if(!c)return;if(!v){el.value=c.name;return}c.name=v;save();return}
+  const ut=el.closest('tr[data-wuse]');
+  if(ut&&el.dataset.uf){const p=projectById(ui.rproj),u=p&&(p.workUse||[]).find(x=>x.wiId===ut.dataset.wuse);if(!u)return;u.estQty=Math.max(0,parseFloat(el.value)||0);save();renderRecords();return}
   const tr=el.closest('tr[data-wid]');if(!tr||!el.dataset.wf)return;
-  const w=p.workItems.find(x=>x.id===tr.dataset.wid);if(!w)return;
+  const w=wiById(tr.dataset.wid);if(!w)return;
   const f=el.dataset.wf;
-  if(f==='name'){const v=el.value.trim();if(!v){el.value=w.name;return}w.name=v}
+  if(f==='name'){const v=el.value.trim();if(!v||state.workItems.some(x=>x!==w&&x.name===v)){el.value=w.name;if(v)$('wiErr').textContent=`已經有「${v}」這個品項了。`;return}w.name=v}
   else if(f==='unit')w.unit=el.value.trim();
+  else if(f==='cat')w.cat=el.value;
   else w[f]=Math.max(0,parseFloat(el.value)||0);
-  save();renderRecords();
+  $('wiErr').textContent='';save();renderRecords();
 });
 $('rBody').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&e.target.closest('tfoot')&&e.target.closest('.wr-t')&&!e.target.closest('.combo .cbtn')){e.preventDefault();
-    if(e.target.id==='wiName')e.target.dispatchEvent(new Event('change',{bubbles:true}));addWorkItem()}
-  else if(e.key==='Enter'&&e.target.matches('tbody input'))e.target.blur();
+  if(e.key!=='Enter'||e.isComposing)return;
+  if(e.target.id==='catNew'){e.preventDefault();addCat();return}
+  const ft=e.target.closest('tr[data-addcat]');if(ft){e.preventDefault();addWorkItemFrom(ft);return}
+  if(e.target.closest('#wuQty,#wuItem')){e.preventDefault();addUse();return}
+  if(e.target.matches('tbody input,.wcat-name'))e.target.blur();
 });
-/* batches */
+/* drag a 分類 header to reorder */
+$('rBody').addEventListener('dragstart',e=>{const h=e.target.closest&&e.target.closest('.wcat-h');if(!h||e.target.matches('input')){return}wcatDrag=h.closest('.wcat').dataset.wcat;e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',wcatDrag)}catch(_){}h.closest('.wcat').classList.add('wdragging')});
+$('rBody').addEventListener('dragover',e=>{if(wcatDrag===null)return;const s=e.target.closest('.wcat');if(!s||!s.dataset.wcat)return;e.preventDefault();
+  document.querySelectorAll('.wcat.wdrop-b,.wcat.wdrop-a').forEach(x=>x.classList.remove('wdrop-b','wdrop-a'));const r=s.getBoundingClientRect();s.classList.add(e.clientY<r.top+Math.min(40,r.height/2)?'wdrop-b':'wdrop-a')});
+$('rBody').addEventListener('drop',e=>{if(wcatDrag===null)return;e.preventDefault();const s=e.target.closest('.wcat');const from=wcatDrag;wcatDrag=null;
+  document.querySelectorAll('.wcat').forEach(x=>x.classList.remove('wdrop-b','wdrop-a','wdragging'));
+  if(!s||!s.dataset.wcat||s.dataset.wcat===from)return;const r=s.getBoundingClientRect(),before=e.clientY<r.top+Math.min(40,r.height/2);
+  const cs=state.workCats,c=cs.find(x=>x.id===from);if(!c)return;cs.splice(cs.indexOf(c),1);let i=cs.findIndex(x=>x.id===s.dataset.wcat);if(!before)i++;cs.splice(i,0,c);save();renderRecords()});
+$('rBody').addEventListener('dragend',()=>{wcatDrag=null;document.querySelectorAll('.wcat').forEach(x=>x.classList.remove('wdrop-b','wdrop-a','wdragging'))});
+/* batches of one item (all projects, or only one when opened from a project) */
 let batchEdit=null;
-function openBatches(pid,wid){batchEdit={pid,wid};renderBatches();$('batchDlg').showModal()}
+function openBatches(wid,pid){batchEdit={wid,pid:pid||null};renderBatches();$('batchDlg').showModal()}
+function projOpts(cur){return '<option value="">（不指定專案）</option>'+state.projects.map(p=>`<option value="${esc(p.id)}"${p.id===cur?' selected':''}>${esc(p.name)}</option>`).join('')+(cur&&!projectById(cur)?`<option value="${esc(cur)}" selected>（已刪除的專案）</option>`:'')}
 function renderBatches(){
-  const p=projectById(batchEdit.pid),w=p&&p.workItems.find(x=>x.id===batchEdit.wid);if(!w)return;
-  const a=wiActual(w),u=w.unit||'單位';
-  $('batchTitle').textContent=`${p.name}｜${w.name}`;
-  $('batchSum').innerHTML=`<span><b>${a.q?f2(a.q):0}</b>${esc(u)}</span><span><b>${f1(a.h)}</b>小時</span><span>實際平均 <b>${f2(a.avg)}</b> 小時／${esc(u)}</span>${w.estRate>0?`<span>預估 ${f2(w.estRate)} 小時／${esc(u)}</span>`:''}${w.estQty>0&&a.q?`<span>進度 ${Math.round(a.q/w.estQty*100)}%（${f2(a.q)}／${f2(w.estQty)}）</span>`:''}`;
-  const rows=w.batches.slice().sort((x,y)=>(x.date||'9')<(y.date||'9')?-1:1).map(b=>`<tr data-bid="${esc(b.id)}">
-    <td style="width:160px"><input type="date" data-bf="date" value="${b.date}" aria-label="日期"></td>
+  const w=wiById(batchEdit.wid);if(!w)return;const pid=batchEdit.pid,p=pid&&projectById(pid);
+  const a=wiActual(w,pid||undefined),u=w.unit||'單位';
+  $('batchTitle').textContent=`${w.name}${p?'｜'+p.name:''}`;
+  const all=pid?wiActual(w):null;
+  $('batchSum').innerHTML=`<span><b>${a.q?f2(a.q):0}</b>${esc(u)}</span><span><b>${f1(a.h)}</b>小時</span><span>${p?'本專案':''}實際平均 <b>${f2(a.avg)}</b> 小時／${esc(u)}</span>${all&&isFinite(all.avg)?`<span>全部專案 ${f2(all.avg)}</span>`:''}${w.estRate>0?`<span>預估 ${f2(w.estRate)} 小時／${esc(u)}</span>`:''}`;
+  {const ids=[...new Set(w.batches.map(b=>b.projectId||''))].filter(Boolean);
+    const users=state.projects.filter(x=>(x.workUse||[]).some(u=>u.wiId===w.id)||ids.includes(x.id));
+    $('batchProj').innerHTML=pid?'':`<div class="dsec" style="margin:4px 0 6px">用在哪些專案</div>${users.length?users.map(x=>{const a=wiActual(w,x.id),u=(x.workUse||[]).find(y=>y.wiId===w.id);
+      return `<button class="pj" data-bgo="${esc(x.id)}" title="打開這個專案的估時"><i class="dot" style="width:9px;height:9px;border-radius:3px;background:${esc(x.color)}"></i>${esc(x.name)}<span class="muted">${u&&u.estQty?'　預估 '+f2(u.estQty):''}${a.n?'　實際平均 '+f2(a.avg):''}</span></button>`}).join(''):'<span class="muted" style="font-size:13px">還沒有專案用到這個品項。</span>'}<div class="dsec" style="margin:12px 0 6px">製作批次</div>`}
+  const list=w.batches.filter(b=>!pid||(b.projectId||'')===pid);
+  const rows=list.slice().sort((x,y)=>(x.date||'9')<(y.date||'9')?-1:1).map(b=>`<tr data-bid="${esc(b.id)}">
+    <td style="width:150px"><input type="date" data-bf="date" value="${b.date}" aria-label="日期"></td>
+    ${pid?'':`<td><select class="bt-task" data-bf="proj" aria-label="專案">${projOpts(b.projectId||'')}</select></td>`}
     <td class="num"><input class="n" type="number" min="0" step="1" data-bf="qty" value="${b.qty||''}" aria-label="數量"></td>
     <td class="num"><input class="n" type="number" min="0" step="0.1" data-bf="hours" value="${b.hours||''}" aria-label="實際時數"></td>
     <td class="num endc">${b.qty?f2(b.hours/b.qty):'—'}</td>
-    <td><select class="bt-task" data-bf="task" aria-label="對應的工作">${batchTaskOpts(p,b.taskId)}</select></td>
+    <td><select class="bt-task" data-bf="task" aria-label="對應的工作">${batchTaskOpts(b.projectId||'',b.taskId)}</select></td>
     <td><input data-bf="note" value="${esc(b.note)}" placeholder="例如：CH1–2" aria-label="備註"></td>
     <td style="width:60px"><button class="btn sm danger" data-brm="${esc(b.id)}">刪除</button></td></tr>`).join('');
-  $('batchTable').innerHTML=`<table class="tt bt-t wr-t" style="min-width:700px">
-    <thead><tr><th>日期</th><th class="num">數量（${esc(u)}）</th><th class="num">實際時數</th><th class="num">每${esc(u)}</th><th>工作（選填）</th><th>備註</th><th></th></tr></thead>
-    <tbody>${rows||'<tr><td colspan="7" class="muted" style="padding:12px">還沒有批次紀錄。</td></tr>'}</tbody>
-    <tfoot><tr><td><input type="date" id="bnDate" aria-label="日期"></td><td class="num"><input class="n" type="number" min="0" step="1" id="bnQty" aria-label="數量"></td><td class="num"><input class="n" type="number" min="0" step="0.1" id="bnHours" aria-label="實際時數"></td><td></td><td><select class="bt-task" id="bnTask" aria-label="對應的工作">${batchTaskOpts(p,'')}</select></td><td><input id="bnNote" placeholder="備註（選填）" aria-label="備註"></td><td><button class="btn primary sm" id="bnAdd">新增</button></td></tr></tfoot>
+  const N=pid?7:8;
+  $('batchTable').innerHTML=`<table class="tt bt-t wr-t" style="min-width:${pid?700:860}px">
+    <thead><tr><th>日期</th>${pid?'':'<th>專案</th>'}<th class="num">數量（${esc(u)}）</th><th class="num">實際時數</th><th class="num">每${esc(u)}</th><th>工作（選填）</th><th>備註</th><th></th></tr></thead>
+    <tbody>${rows||`<tr><td colspan="${N}" class="muted" style="padding:12px">還沒有批次紀錄。</td></tr>`}</tbody>
+    <tfoot><tr><td><input type="date" id="bnDate" aria-label="日期"></td>${pid?'':`<td><select class="bt-task" id="bnProj" aria-label="專案">${projOpts(ui.rmode==='proj'&&ui.rproj?ui.rproj:'')}</select></td>`}<td class="num"><input class="n" type="number" min="0" step="1" id="bnQty" aria-label="數量"></td><td class="num"><input class="n" type="number" min="0" step="0.1" id="bnHours" aria-label="實際時數"></td><td></td><td><select class="bt-task" id="bnTask" aria-label="對應的工作">${batchTaskOpts(pid||($('bnProj')?'':''),'')}</select></td><td><input id="bnNote" placeholder="備註（選填）" aria-label="備註"></td><td><button class="btn primary sm" id="bnAdd">新增</button></td></tr></tfoot>
   </table>`;
   $('bnDate').value=toK(todayN());
+  if($('bnProj'))$('bnTask').innerHTML=batchTaskOpts($('bnProj').value,'');
 }
-/* tasks of the project that a batch can point to (not already tied to another batch) */
-function batchTaskOpts(p,cur){
-  const used=new Set();for(const pp of state.projects)for(const w of (pp.workItems||[]))for(const b of w.batches)if(b.taskId&&b.taskId!==cur)used.add(b.taskId);
-  const ts=state.tasks.filter(t=>t.projectId===p.id&&!used.has(t.id)).sort((a,b)=>NAT.compare(a.name,b.name));
-  return '<option value="">—</option>'+ts.map(t=>{const pp=personById(t.personId);return `<option value="${esc(t.id)}"${t.id===cur?' selected':''}>${esc(t.name)}${pp?'（'+esc(pp.name)+'）':''}${t.done?' ✓':''}</option>`}).join('');
+/* tasks a batch can point to (not already tied to another batch); limited to the batch's project when it has one */
+function batchTaskOpts(pid,cur){
+  const used=new Set();for(const w of state.workItems||[])for(const b of w.batches)if(b.taskId&&b.taskId!==cur)used.add(b.taskId);
+  const ts=state.tasks.filter(t=>(!pid||t.projectId===pid)&&!used.has(t.id)).sort((a,b)=>NAT.compare(a.name,b.name));
+  return '<option value="">—</option>'+ts.map(t=>{const pp=personById(t.personId),pj=!pid&&projectById(t.projectId);return `<option value="${esc(t.id)}"${t.id===cur?' selected':''}>${pj?esc(pj.name)+'｜':''}${esc(t.name)}${pp?'（'+esc(pp.name)+'）':''}${t.done?' ✓':''}</option>`}).join('');
 }
 /* tie a batch to a task: the task becomes completed and carries the batch's quantity / hours (kept in step by syncWork) */
 function linkBatchTask(w,b,tid){
@@ -2798,37 +2946,42 @@ function linkBatchTask(w,b,tid){
   const t=tid&&state.tasks.find(x=>x.id===tid);if(!t)return'';
   const wasDone=t.done;
   t.wiId=w.id;t.wiQty=b.qty;t.actualHours=b.hours;t.done=true;if(!t.doneDate||!wasDone)t.doneDate=b.date||t.doneDate||toK(todayN());
-  b.taskId=t.id;if(!b.note)b.note=t.name;
+  b.taskId=t.id;if(!b.note)b.note=t.name;if(t.projectId){b.projectId=t.projectId;useItem(projectById(t.projectId),w.id)}
   return wasDone?'':`「${t.name}」已一併標為完成。`;
 }
 function addBatch(){
-  const p=projectById(batchEdit.pid),w=p&&p.workItems.find(x=>x.id===batchEdit.wid);if(!w)return;
+  const w=wiById(batchEdit.wid);if(!w)return;
   const qty=parseFloat($('bnQty').value),hours=parseFloat($('bnHours').value);
   if(!(qty>0)||!(hours>0)){$('batchErr').textContent='請填數量和實際時數（都要大於 0）。';return}
   $('batchErr').textContent='';
-  const b={id:uid(),date:$('bnDate').value||'',qty,hours,note:$('bnNote').value.trim()};
+  const pid=batchEdit.pid||($('bnProj')?$('bnProj').value:'');
+  const b={id:uid(),date:$('bnDate').value||'',qty,hours,note:$('bnNote').value.trim()};if(pid){b.projectId=pid;useItem(projectById(pid),w.id)}
   w.batches.push(b);const msg=linkBatchTask(w,b,$('bnTask').value);
   save();renderBatches();renderRecords();if(msg)toast(msg);const q=$('bnQty');if(q)q.focus();
 }
 $('batchTable').addEventListener('change',e=>{
+  if(e.target.id==='bnProj'){$('bnTask').innerHTML=batchTaskOpts(e.target.value,'');return}
   if(e.target.id!=='bnTask')return;const t=state.tasks.find(x=>x.id===e.target.value);if(!t)return;
   if(!$('bnNote').value.trim())$('bnNote').value=t.name;
   if(t.doneDate)$('bnDate').value=t.doneDate;
+  if($('bnProj')&&!$('bnProj').value&&t.projectId)$('bnProj').value=t.projectId;
   if(!$('bnQty').value&&t.wiQty>0)$('bnQty').value=t.wiQty;
   if(!$('bnHours').value)$('bnHours').value=t.actualHours||t.hours||'';
 });
+$('batchProj').addEventListener('click',e=>{const b=e.target.closest('[data-bgo]');if(!b)return;$('batchDlg').close();ui.rproj=b.dataset.bgo;ui.rmode='proj';renderRecords()});
 $('batchTable').addEventListener('click',e=>{
   if(e.target.closest('#bnAdd')){addBatch();return}
   const rm=e.target.closest('[data-brm]');
-  if(rm){const p=projectById(batchEdit.pid),w=p.workItems.find(x=>x.id===batchEdit.wid),b=w.batches.find(x=>x.id===rm.dataset.brm);
-    if(b&&b.taskId){const lt=state.tasks.find(x=>x.id===b.taskId);if(lt)lt.actualHours=0}
+  if(rm){const w=wiById(batchEdit.wid),b=w&&w.batches.find(x=>x.id===rm.dataset.brm);if(!b)return;
+    if(b.taskId){const lt=state.tasks.find(x=>x.id===b.taskId);if(lt)lt.actualHours=0}
     w.batches=w.batches.filter(x=>x!==b);save();renderBatches();renderRecords()}
 });
 $('batchTable').addEventListener('change',e=>{
   const el=e.target,tr=el.closest('tr[data-bid]');if(!tr||!el.dataset.bf)return;
-  const p=projectById(batchEdit.pid),w=p.workItems.find(x=>x.id===batchEdit.wid),b=w&&w.batches.find(x=>x.id===tr.dataset.bid);if(!b)return;
+  const w=wiById(batchEdit.wid),b=w&&w.batches.find(x=>x.id===tr.dataset.bid);if(!b)return;
   const f=el.dataset.bf;
   if(f==='task'){const msg=linkBatchTask(w,b,el.value);$('batchErr').textContent='';save();renderBatches();renderRecords();if(msg)toast(msg);return}
+  if(f==='proj'){if(el.value){b.projectId=el.value;useItem(projectById(el.value),w.id)}else delete b.projectId;save();renderBatches();renderRecords();return}
   const lt=b.taskId&&state.tasks.find(x=>x.id===b.taskId);
   if(f==='date'){b.date=el.value||'';if(lt&&b.date)lt.doneDate=b.date}else if(f==='note')b.note=el.value.trim();
   else{const v=parseFloat(el.value);if(!(v>0)){el.value=b[f]||'';$('batchErr').textContent='數量和時數都要大於 0。';return}b[f]=v;if(lt){if(f==='qty')lt.wiQty=v;else lt.actualHours=v}}
@@ -3296,7 +3449,7 @@ $('pdetail').addEventListener('click',async e=>{
   const rmi=t.closest('[data-rmin]');
   if(rmi){const p=projectById(ui.project),x=p.intakes.find(y=>y.id===rmi.dataset.rmin);if(!await ask(`刪除進稿項目「${x.name}」？`))return;p.intakes=p.intakes.filter(y=>y.id!==x.id);save();renderProjects();return}
   const cb=t.closest('[data-cols]');if(cb){openColDlg(cb.dataset.cols);return}
-  const cr=t.closest('[data-colreset]');if(cr){const tk=cr.dataset.colreset;setColOrder(tk,null);const W=colWs();delete W[tk];try{localStorage.setItem('prod-schedule-colw',JSON.stringify(W))}catch(_){}renderProjects();return}
+  const cr=t.closest('[data-colreset]');if(cr){const tk=cr.dataset.colreset;setColOrder(tk,null);const W=colWs();delete W[tk];if(tk==='t')delete W.rg;try{localStorage.setItem('prod-schedule-colw',JSON.stringify(W))}catch(_){}renderProjects();return}
   const so=t.closest('[data-sort]');
   if(so){const[tb,k]=so.dataset.sort.split(':');const st=ui.sorts[tb];ui.sorts[tb]=st.key===k?{key:k,dir:-st.dir}:{key:k,dir:1};renderProjects();return}
   const im=t.closest('[data-msimp]');
@@ -3366,12 +3519,12 @@ function focusKey(el){
   return sel?{rowSel,sel,seg}:null;
 }
 function refocus(key,fallback){
-  if(fallback&&fallback.isConnected){fallback.focus();return}
+  if(fallback&&fallback.isConnected){fallback.focus({preventScroll:true});return}
   if(!key)return;
   const scope=key.rowSel?document.querySelector(key.rowSel):document;if(!scope)return;
   let el=scope.querySelector(key.sel);if(!el)return;
   if(key.seg){const w=el.closest('.dt');el=w&&w.querySelector(key.seg)}
-  if(el){el.focus();el.select&&el.select()}
+  if(el){el.focus({preventScroll:true});el.select&&el.select()}
 }
 function enhanceDate(h){
   if(h.dataset.dtx)return;h.dataset.dtx='1';
@@ -3534,18 +3687,15 @@ function syncDoneField(){
   if(linked&&!$('tAct').value)$('tAct').value=$('tHours').value;
 }
 function renderTaskWI(sel,qty){
-  const p=projectById($('tProject').value),ws=p?(p.workItems||[]):[];
-  const own=new Set(ws.map(w=>w.name.trim())),hist=p?itemStats(p.id):new Map();
-  const others=[...hist.keys()].filter(n=>!own.has(n)).sort((a,b)=>NAT.compare(a,b));
-  if(!p||(!ws.length&&!others.length)){$('tWiWrap').hidden=true;$('tWi').innerHTML='<option value=""></option>';$('tWi').value='';syncDoneField();return}
+  const ws=state.workItems||[];
+  if(!ws.length){$('tWiWrap').hidden=true;$('tWi').innerHTML='<option value=""></option>';$('tWi').value='';syncDoneField();return}
   $('tWiWrap').hidden=false;
-  $('tWi').innerHTML='<option value="">不記錄</option>'+(ws.length?`<optgroup label="這個專案的品項">${ws.map(w=>`<option value="${esc(w.id)}">${esc(w.name)}</option>`).join('')}</optgroup>`:'')
-    +(others.length?`<optgroup label="其他專案的品項（選了會自動加到這個專案）">${others.map(n=>`<option value="new:${esc(n)}">${esc(n)}</option>`).join('')}</optgroup>`:'');
-  $('tWi').value=sel&&ws.some(w=>w.id===sel)?sel:(sel&&String(sel).startsWith('new:')&&others.includes(sel.slice(4))?sel:'');
+  $('tWi').innerHTML='<option value="">不記錄</option>'+wiOptions(sel);
+  $('tWi').value=sel&&ws.some(w=>w.id===sel)?sel:'';
   if(qty!==undefined)$('tWiQty').value=qty||'';
-  const v=$('tWi').value,w=ws.find(x=>x.id===v),g=v.startsWith('new:')?hist.get(v.slice(4)):null,unit=w?w.unit:g?g.unit:'';
-  $('tWiQtyLabel').textContent=`數量${unit?'（'+unit+'）':''}`;
-  $('tWiQty').disabled=!w&&!g;
+  const w=wiById($('tWi').value);
+  $('tWiQtyLabel').textContent=`數量${w&&w.unit?'（'+w.unit+'）':''}`;
+  $('tWiQty').disabled=!w;
   syncDoneField();
 }
 let prepDraft=[];
@@ -3628,8 +3778,7 @@ $('taskForm').addEventListener('submit',e=>{
     wiId:$('tWiWrap').hidden?'':$('tWi').value,wiQty:$('tWiWrap').hidden||!$('tWi').value?0:Math.max(0,parseFloat($('tWiQty').value)||0),
     actualHours:$('tDone').checked&&!$('tActWrap').hidden?Math.max(0,parseFloat($('tAct').value)||0):0};
   if(data.wiId&&!(data.wiQty>0)){e.preventDefault();$('tErr').textContent='選了工時品項，請填這項工作的數量。';$('tWiQty').focus();return}
-  if(data.wiId&&data.wiId.startsWith('new:')){const pr=projectById(data.projectId);
-    if(pr){const w=ensureWorkItem(pr,data.wiId.slice(4));data.wiId=w.id;setTimeout(()=>toast(`已把品項「${w.name}」加到「${pr.name}」的工時紀錄。`),0)}else data.wiId=''}
+  if(data.wiId)useItem(projectById(data.projectId),data.wiId);
   let tid=editingId;
   if(editingId)Object.assign(state.tasks.find(x=>x.id===editingId),data);
   else{tid=uid();state.tasks.push({id:tid,...data})}
@@ -3974,18 +4123,23 @@ function taskRows(){
   });
   return rows;
 }
+function itemRows(){
+  const cats=state.workCats||[],rank=w=>{const i=cats.findIndex(c=>c.id===w.cat);return i<0?1e9:i};
+  return (state.workItems||[]).slice().sort((a,b)=>rank(a)-rank(b)||NAT.compare(a.name,b.name)).map(w=>{const a=wiActual(w),c=catById(w.cat);
+    return{'分類':c?c.name:'','製作品項':w.name,'單位':w.unit,'預估時數':w.estRate||'','實際數量':a.q||'','實際時數':a.h?Math.round(a.h*10)/10:'','實際平均':isFinite(a.avg)?Math.round(a.avg*100)/100:''}});
+}
 function workRows(){
   const out=[],H=HPD();
-  for(const p of state.projects)for(const w of (p.workItems||[])){const a=wiActual(w),est=w.estRate*w.estQty;
-    out.push({'專案':p.name,'單元數':p.units||'','製作品項':w.name,'單位':w.unit,'預估時數':w.estRate||'','預估數量':w.estQty||'','預估總時':est?Math.round(est*10)/10:'','預估天數':est?Math.round(est/H*10)/10:'','實際數量':a.q||'','實際時數':a.h?Math.round(a.h*10)/10:'','實際平均':isFinite(a.avg)?Math.round(a.avg*100)/100:''})}
+  for(const p of state.projects)for(const u of (p.workUse||[])){const w=wiById(u.wiId);if(!w)continue;const a=wiActual(w,p.id),est=w.estRate*u.estQty;
+    out.push({'專案':p.name,'單元數':p.units||'','製作品項':w.name,'單位':w.unit,'預估時數':w.estRate||'','預估數量':u.estQty||'','預估總時':est?Math.round(est*10)/10:'','預估天數':est?Math.round(est/H*10)/10:'','實際數量':a.q||'','實際時數':a.h?Math.round(a.h*10)/10:'','實際平均':isFinite(a.avg)?Math.round(a.avg*100)/100:''})}
   return out;
 }
 function batchRows(){
   const out=[];
-  for(const p of state.projects)for(const w of (p.workItems||[]))for(const b of w.batches)out.push({'專案':p.name,'製作品項':w.name,'日期':b.date,'數量':b.qty,'實際時數':b.hours,'備註':b.note});
-  return out;
+  for(const w of state.workItems||[])for(const b of w.batches)out.push({'專案':(projectById(b.projectId)||{}).name||'','製作品項':w.name,'日期':b.date,'數量':b.qty,'實際時數':b.hours,'備註':b.note});
+  return out.sort((a,b)=>(a['日期']||'9')<(b['日期']||'9')?-1:1);
 }
-const WORK_COLS=['專案','單元數','製作品項','單位','預估時數','預估數量','預估總時','預估天數','實際數量','實際時數','實際平均'],BATCH_COLS=['專案','製作品項','日期','數量','實際時數','備註'];
+const ITEM_COLS=['分類','製作品項','單位','預估時數','實際數量','實際時數','實際平均'],WORK_COLS=['專案','單元數','製作品項','單位','預估時數','預估數量','預估總時','預估天數','實際數量','實際時數','實際平均'],BATCH_COLS=['專案','製作品項','日期','數量','實際時數','備註'];
 function returnRows(){
   const out=[];
   for(const p of state.projects)for(const r of (p.returns||[])){const m=r.stage&&p.milestones.find(x=>x.id===r.stage);
@@ -4059,7 +4213,7 @@ function openCopyInner(kind){
   else if(kind==='leaves'){title='請假';text=toTSV(leaveRows(),['姓名','日期','星期','時段','備註'])}
   else if(kind==='projects'){title='專案';text=toTSV(projectRows(),['順序','專案','顏色','工作數'])}
   else if(kind==='days'){title='假日與補班';text=toTSV(dayRows(),['日期','星期','類型','名稱'])}
-  else if(kind==='work'){title='工時紀錄';text=toTSV(workRows(),WORK_COLS)}
+  else if(kind==='work'){title='工時品項';text=toTSV(itemRows(),ITEM_COLS)+'\n\n'+toTSV(workRows(),WORK_COLS)}
   else if(kind==='returns'){title='回檔';text=toTSV(returnRows(),RET_COLS)}
   else if(kind==='intake'){title='進稿';text=toTSV(intakeRows(),INTAKE_COLS)}
   else{title='JSON 備份';text=JSON.stringify(backupData(),null,2);if(xScopeAll())setTimeout(markExported,0);note='複製後貼到記事本，存成副檔名 .json 的檔案，之後就能用「選擇檔案匯入」還原。'}
@@ -4095,7 +4249,8 @@ $('xAll').onclick=()=>{xPicked=new Set(xKeys());renderXPick()};
 $('xNone').onclick=()=>{xPicked=new Set();renderXPick()};
 function scopedState(){
   const keep=new Set(xKeys().filter(k=>xPicked&&xPicked.has(k)));
-  return {...state,projects:state.projects.filter(p=>keep.has(p.id)),tasks:state.tasks.filter(t=>keep.has(projectById(t.projectId)?t.projectId:''))};
+  return {...state,projects:state.projects.filter(p=>keep.has(p.id)),tasks:state.tasks.filter(t=>keep.has(projectById(t.projectId)?t.projectId:'')),
+    workItems:(state.workItems||[]).map(w=>({...w,batches:w.batches.filter(b=>!b.projectId||keep.has(b.projectId))}))};
 }
 /* run fn with only the chosen projects visible to the row builders */
 function withScope(fn){
@@ -4128,6 +4283,7 @@ $('exportBtn').onclick=async()=>{
     add(colRows(),['表格','欄位順序'],'欄位順序',[10,70]);
     add(leaveRows(),['姓名','日期','星期','時段','備註'],'請假',[12,12,6,8,20]);
     add(dayRows(),['日期','星期','類型','名稱'],'假日與補班',[12,6,6,20]);
+    add(itemRows(),ITEM_COLS,'工時品項',[12,32,6,9,9,9,9]);
     add(workRows(),WORK_COLS,'工時紀錄',[16,6,32,6,9,9,9,9,9,9,9]);
     add(batchRows(),BATCH_COLS,'工時批次',[16,32,12,8,9,20]);
     add(returnRows(),RET_COLS,'回檔',[16,12,24,12,16,40]);
@@ -4222,28 +4378,34 @@ function applySheets(base,sh,opts){
     rep.ms++;
   });
   if(REP&&sh.milestones)for(const n of projOf(sh.milestones,'專案')){const p=out.projects.find(x=>x.name===n);if(!p)continue;const b=p.milestones.length;p.milestones=p.milestones.filter(m=>touched.has(m.id));rep.removed+=b-p.milestones.length}
-  if(REP&&(sh.work||sh.batches))for(const n of new Set([...projOf(sh.work,'專案'),...projOf(sh.batches,'專案')])){
-    const p=out.projects.find(x=>x.name===n);if(!p)continue;
-    for(const w of (p.workItems||[])){const b=w.batches.length;w.batches=w.batches.filter(x=>x.taskId);rep.removed+=b-w.batches.length}  // task-linked batches are rebuilt from the tasks
-  }
+  out.workItems=out.workItems||[];out.workCats=out.workCats||[];
+  const catByName=n=>{n=txt(n);if(!n||n==='未分類')return'';let c=out.workCats.find(x=>x.name===n);if(!c){c={id:uid(),name:n};out.workCats.push(c)}return c.id};
+  const wiByName=n=>{n=txt(n);let w=out.workItems.find(x=>x.name===n);if(!w){w={id:uid(),name:n,unit:'',estRate:0,cat:'',batches:[]};out.workItems.push(w)}return w};
+  (sh.items||[]).forEach((r,i)=>{
+    const name=txt(cell(r,'製作品項','品項')),cn=txt(cell(r,'分類'));
+    if(!name){if(cn)catByName(cn);return}
+    const w=wiByName(name);if(cn||Object.prototype.hasOwnProperty.call(r,'分類'))w.cat=catByName(cn);
+    const un=txt(cell(r,'單位'));if(un)w.unit=un;const er=parseFloat(cell(r,'預估時數'));if(er>0)w.estRate=er;rep.work++;
+  });
+  if(REP&&sh.work)for(const n of projOf(sh.work,'專案')){const p=out.projects.find(x=>x.name===n);if(!p)continue;rep.removed+=(p.workUse||[]).length;p.workUse=[]}
+  if(REP&&sh.batches)for(const n of projOf(sh.batches,'專案')){const p=out.projects.find(x=>x.name===n);if(!p)continue;
+    for(const w of out.workItems){const b=w.batches.length;w.batches=w.batches.filter(x=>x.taskId||x.projectId!==p.id);rep.removed+=b-w.batches.length}}  // task-linked batches are rebuilt from the tasks
   (sh.work||[]).forEach((r,i)=>{
     const pj=txt(cell(r,'專案')),name=txt(cell(r,'製作品項','品項'));
     if(!pj||pj==='未分類'||!name){rep.skipped.push(`工時紀錄第 ${i+2} 列缺專案或製作品項`);return}
-    const p=out.projects.find(x=>x.id===projByName(pj));p.workItems=p.workItems||[];
+    const p=out.projects.find(x=>x.id===projByName(pj));p.workUse=p.workUse||[];
     const u=parseFloat(cell(r,'單元數'));if(u>0)p.units=Math.round(u);
-    const data={name,unit:txt(cell(r,'單位')),estRate:Math.max(0,parseFloat(cell(r,'預估時數'))||0),estQty:Math.max(0,parseFloat(cell(r,'預估數量'))||0)};
-    const ex=p.workItems.find(w=>w.name===name);if(ex){Object.assign(ex,data);touched.add(ex.id)}else{const id=uid();p.workItems.push({id,...data,batches:[]});touched.add(id)}rep.work++;
+    const w=wiByName(name),un=txt(cell(r,'單位'));if(un&&!w.unit)w.unit=un;const er=parseFloat(cell(r,'預估時數'));if(er>0&&!(w.estRate>0))w.estRate=er;
+    const q=Math.max(0,parseFloat(cell(r,'預估數量'))||0),ex=p.workUse.find(x=>x.wiId===w.id);if(ex)ex.estQty=q;else p.workUse.push({wiId:w.id,estQty:q});rep.work++;
   });
   (sh.batches||[]).forEach((r,i)=>{
     const pj=txt(cell(r,'專案')),name=txt(cell(r,'製作品項','品項')),qty=parseFloat(cell(r,'數量')),hours=parseFloat(cell(r,'實際時數','時數'));
-    if(!pj||pj==='未分類'||!name||!(qty>0)||!(hours>0)){rep.skipped.push(`工時批次第 ${i+2} 列缺專案、品項、數量或時數`);return}
-    const p=out.projects.find(x=>x.id===projByName(pj));p.workItems=p.workItems||[];
-    let w=p.workItems.find(x=>x.name===name);if(!w){w={id:uid(),name,unit:'',estRate:0,estQty:0,batches:[]};p.workItems.push(w)}
-    touched.add(w.id);
+    if(!name||!(qty>0)||!(hours>0)){rep.skipped.push(`工時批次第 ${i+2} 列缺品項、數量或時數`);return}
+    const pid=pj&&pj!=='未分類'?projByName(pj):'',w=wiByName(name);
+    if(pid){const p=out.projects.find(x=>x.id===pid);p.workUse=p.workUse||[];if(!p.workUse.some(u=>u.wiId===w.id))p.workUse.push({wiId:w.id,estQty:0})}
     const date=normDate(cell(r,'日期')),note=txt(cell(r,'備註'));
-    if(!w.batches.some(b=>b.date===date&&b.qty===qty&&b.hours===hours&&b.note===note))w.batches.push({id:uid(),date,qty,hours,note});
+    if(!w.batches.some(b=>(b.projectId||'')===pid&&b.date===date&&b.qty===qty&&b.hours===hours&&b.note===note))w.batches.push({id:uid(),date,qty,hours,note,...(pid?{projectId:pid}:{})});
   });
-  if(REP&&sh.work)for(const n of projOf(sh.work,'專案')){const p=out.projects.find(x=>x.name===n);if(!p)continue;const b=(p.workItems||[]).length;p.workItems=(p.workItems||[]).filter(w=>touched.has(w.id));rep.removed+=b-p.workItems.length}
   (sh.returns||[]).forEach((r,i)=>{
     const pj=txt(cell(r,'專案')),date=normDate(cell(r,'回檔日期','日期'));
     if(!pj||pj==='未分類'||!date){rep.skipped.push(`回檔第 ${i+2} 列缺專案或回檔日期`);return}
@@ -4288,12 +4450,11 @@ function applySheets(base,sh,opts){
   // link tasks to 工時品項 by name (after the 工時紀錄 sheet has been read)
   for(const t of out.tasks){if(t._wi===undefined)continue;const name=t._wi;delete t._wi;
     if(!name){t.wiId='';continue}
-    const p=out.projects.find(x=>x.id===t.projectId);if(!p){t.wiId='';continue}p.workItems=p.workItems||[];
-    let w=p.workItems.find(x=>x.name===name);
-    if(!w){if(!canMakeWI)continue;w={id:uid(),name,unit:'',estRate:0,estQty:0,batches:[]};p.workItems.push(w)}
-    t.wiId=w.id;
+    let w=out.workItems.find(x=>x.name===name);
+    if(!w){if(!canMakeWI)continue;w=wiByName(name)}
+    t.wiId=w.id;const p=out.projects.find(x=>x.id===t.projectId);if(p){p.workUse=p.workUse||[];if(!p.workUse.some(u=>u.wiId===w.id))p.workUse.push({wiId:w.id,estQty:0})}
     // batches that came from this task are rebuilt by syncWork; drop duplicates read from the 工時批次 sheet
-    if(t.done&&t.wiQty>0&&t.actualHours>0){const i=w.batches.findIndex(b=>!b.taskId&&b.qty===t.wiQty&&b.hours===t.actualHours&&b.note===t.name);if(i>=0)w.batches.splice(i,1)}
+    if(t.done&&t.wiQty>0&&t.actualHours>0){const i=w.batches.findIndex(b=>!b.taskId&&b.qty===t.wiQty&&b.hours===t.actualHours&&b.note===t.name&&(b.projectId||'')===(t.projectId||''));if(i>=0)w.batches.splice(i,1)}
   }
   return{data:normalize(out),rep};
 }
@@ -4314,7 +4475,7 @@ function reportText(rep){
   return parts.join('、')||'沒有可匯入的資料';
 }
 const IMPORT_CATS=['tasks','ms','ret','intake','work','people','days','projects','todos','settings'];
-const CAT_KEYS={tasks:['tasks'],ms:['milestones'],ret:['returns'],intake:['intakes'],work:['work','batches'],people:['people','leaves'],days:['days'],projects:['projects'],todos:[],settings:[]};
+const CAT_KEYS={tasks:['tasks'],ms:['milestones'],ret:['returns'],intake:['intakes'],work:['work','batches','items'],people:['people','leaves'],days:['days'],projects:['projects'],todos:[],settings:[]};
 const CAT_LABELS={tasks:'工作',ms:'里程碑',ret:'回檔',intake:'進稿',work:'工時紀錄',people:'人員與請假',days:'假日與補班',projects:'專案順序與顏色',todos:'我的待辦',settings:'設定'};
 function importCats(){return new Set([...document.querySelectorAll('#iCats input:checked')].map(i=>i.value))}
 function updateICount(){const n=importCats().size;$('iCount').textContent=n===IMPORT_CATS.length?'全部資料':`已選 ${n} / ${IMPORT_CATS.length} 類`}
@@ -4347,10 +4508,11 @@ $('importFile').onchange=async e=>{
           people:incoming.people.map(p=>({'姓名':p.name,'顏色':p.color,'上班時間':p.sched?schedSummaryOf(p.sched):'公司工時'})),
           projects:incoming.projects.map((p,i)=>({'順序':i+1,'專案':p.name,'顏色':p.color})),
           leaves:incoming.people.flatMap(p=>(p.leaves||[]).map(x=>({'姓名':p.name,'日期':x.date,'時段':LEAVE_PART[x.part],'備註':x.label}))),
-          tasks:incoming.tasks.map(t=>({'專案':(incoming.projects.find(x=>x.id===t.projectId)||{}).name||'','工作名稱':t.name,'製作人員':(incoming.people.find(x=>x.id===t.personId)||{}).name||'','開始日期':t.start,'開始時間':t.startAt||'','時數':t.hours,'回檔日期':t.due,'實際完成':t.doneDate||'','狀態':t.done?'已完成':'','備註':t.note,'工時品項':(((incoming.projects.find(x=>x.id===t.projectId)||{}).workItems||[]).find(w=>w.id===t.wiId)||{}).name||'','品項數量':t.wiQty||'','實際時數':t.actualHours||'','前置項目':prepsText(t)})),
+          tasks:incoming.tasks.map(t=>({'專案':(incoming.projects.find(x=>x.id===t.projectId)||{}).name||'','工作名稱':t.name,'製作人員':(incoming.people.find(x=>x.id===t.personId)||{}).name||'','開始日期':t.start,'開始時間':t.startAt||'','時數':t.hours,'回檔日期':t.due,'實際完成':t.doneDate||'','狀態':t.done?'已完成':'','備註':t.note,'工時品項':(incoming.workItems.find(w=>w.id===t.wiId)||{}).name||'','品項數量':t.wiQty||'','實際時數':t.actualHours||'','前置項目':prepsText(t)})),
           milestones:incoming.projects.flatMap(p=>p.milestones.map(m=>({'專案':p.name,'里程碑':m.name,'日期':m.date,'重要':m.important!==false?'是':'否','狀態':m.done?'已達成':''}))),
-          work:incoming.projects.flatMap(p=>(p.workItems||[]).map(w=>({'專案':p.name,'單元數':p.units||'','製作品項':w.name,'單位':w.unit,'預估時數':w.estRate,'預估數量':w.estQty}))),
-          batches:incoming.projects.flatMap(p=>(p.workItems||[]).flatMap(w=>w.batches.map(b=>({'專案':p.name,'製作品項':w.name,'日期':b.date,'數量':b.qty,'實際時數':b.hours,'備註':b.note})))),
+          items:incoming.workCats.length||incoming.workItems.length?[...incoming.workCats.map(c=>({'分類':c.name,'製作品項':''})),...incoming.workItems.map(w=>({'分類':(incoming.workCats.find(c=>c.id===w.cat)||{}).name||'','製作品項':w.name,'單位':w.unit,'預估時數':w.estRate}))]:[],
+          work:incoming.projects.flatMap(p=>(p.workUse||[]).map(u=>{const w=incoming.workItems.find(x=>x.id===u.wiId)||{};return{'專案':p.name,'單元數':p.units||'','製作品項':w.name||'','預估數量':u.estQty}}).filter(r=>r['製作品項'])),
+          batches:incoming.workItems.flatMap(w=>w.batches.map(b=>({'專案':(incoming.projects.find(x=>x.id===b.projectId)||{}).name||'','製作品項':w.name,'日期':b.date,'數量':b.qty,'實際時數':b.hours,'備註':b.note}))),
           returns:incoming.projects.flatMap(p=>(p.returns||[]).map(r=>({'專案':p.name,'回檔日期':r.date,'回檔名稱':r.name||'','對應里程碑':((p.milestones.find(m=>m.id===r.stage))||{}).name||'','備註':r.note,'回檔內容':r.taskIds.map(id=>(incoming.tasks.find(t=>t.id===id)||{}).name).filter(Boolean).join('、')}))),
           intakes:incoming.projects.flatMap(p=>p.intakes.map(x=>({'專案':p.name,'進稿項目':x.name,'預計進稿日':x.date,'實際進稿日':x.recvDate,'狀態':x.received?'已進稿':'','連動工作':x.taskIds.map(id=>(incoming.tasks.find(t=>t.id===id)||{}).name).filter(Boolean).join('、')}))),
           days:incoming.overrides.map(o=>({'日期':o.date,'類型':o.type,'名稱':o.label}))
@@ -4371,7 +4533,7 @@ $('importFile').onchange=async e=>{
       let tasks=get('工作','工作清單','Tasks');
       if(!tasks&&wb.SheetNames.length)tasks=X.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
       {const cr=get('欄位順序');if(cr){const c=colsFromRows(cr);if(Object.keys(c).length)fileCols=c}}
-      result=run({tasks:tasks||[],projects:get('專案')||[],milestones:get('里程碑')||[],people:get('人員')||[],days:get('假日與補班','假日')||[],intakes:get('進稿')||[],leaves:get('請假')||[],returns:get('回檔')||[],work:get('工時紀錄')||[],batches:get('工時批次')||[]});
+      result=run({items:get('工時品項')||[],tasks:tasks||[],projects:get('專案')||[],milestones:get('里程碑')||[],people:get('人員')||[],days:get('假日與補班','假日')||[],intakes:get('進稿')||[],leaves:get('請假')||[],returns:get('回檔')||[],work:get('工時紀錄')||[],batches:get('工時批次')||[]});
       $('dataOk').textContent='';
     }else{$('dataErr').textContent='只支援 .xlsx、.csv 或 .json 檔。';return}
     const{data,rep}=result;
@@ -4533,7 +4695,12 @@ window.addEventListener('pointerup',endDrag);
 window.addEventListener('pointercancel',endDrag);
 
 ui.viewStart=mondayOf(todayN()-7);
-setView('timeline');
+{let v='timeline';try{const o=JSON.parse(localStorage.getItem('prod-schedule-view')||'{}')||{};
+  if(['timeline','projects','calendar','records','mine'].includes(o.view))v=o.view;
+  if(o.project!==undefined&&(o.project===''||projectById(o.project)))ui.project=o.project;
+  if(o.rmode==='proj'||o.rmode==='item')ui.rmode=o.rmode;if(o.rproj&&projectById(o.rproj))ui.rproj=o.rproj}catch(_){}
+ setView(v);}
+window.addEventListener('pagehide',()=>{try{localStorage.setItem('prod-schedule-view',JSON.stringify({view:ui.view,project:ui.project,rmode:ui.rmode,rproj:ui.rproj}))}catch(_){}});
 $('scroller').scrollLeft=Math.max(0,(todayN()-ui.viewStart)*ui.dw);
 })();
 </script>
