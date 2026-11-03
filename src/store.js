@@ -20,6 +20,7 @@ export function onSyncStatus(cb) {
   cb(syncStatus());
   return () => statusListeners.delete(cb);
 }
+export const pendingWrites = () => inflight;
 function syncStatus() {
   return { inflight, online: navigator.onLine, error: lastError };
 }
@@ -138,6 +139,7 @@ function createLocalBackend() {
     },
     putContent(id, val) {
       data.content[id] = val;
+      emitDoc(subs.content, "content", id);
       return track(persist("content", id, val));
     },
     async getContent(id) {
@@ -170,6 +172,11 @@ function createLocalBackend() {
       data.kv[key] = val;
       emitDoc(subs.kv, "kv", key);
       return track(persist("kv", key, val));
+    },
+    removeKV(key) {
+      delete data.kv[key];
+      emitDoc(subs.kv, "kv", key);
+      return track(persist("kv", key));
     },
     async getKV(key) {
       await ready;
@@ -278,6 +285,9 @@ async function createFirebaseBackend() {
     },
     putKV(key, val) {
       return track(F.setDoc(ref("kv", safe(key)), { value: val, savedAt: Date.now() }));
+    },
+    removeKV(key) {
+      return track(F.deleteDoc(ref("kv", safe(key))));
     },
     async getKV(key) {
       const s = await F.getDoc(ref("kv", safe(key)));

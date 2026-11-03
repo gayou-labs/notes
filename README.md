@@ -1,6 +1,6 @@
 # 筆記
 
-個人筆記工具：筆記、白板、製作排程放在同一個地方，電腦和手機即時同步。
+個人筆記工具：筆記、白板放在同一個地方，電腦和手機即時同步。（製作排程是另一個獨立工具。）
 
 - 網站放在 GitHub Pages（這個儲存庫只有程式，沒有任何筆記內容）
 - 資料存在自己的 Firebase，只有指定的 Google 帳號能讀寫
@@ -15,18 +15,12 @@
 | `src/store.js` | 資料層：本機模式／雲端模式 |
 | `src/Editor.jsx` | 筆記編輯器（BlockNote） |
 | `src/Board.jsx` | 白板（Excalidraw） |
-| `public/schedule.html` | 製作排程（原本的排程表 + 一行橋接） |
-| `public/schedule-bridge.js` | 讓排程表改存進 Firebase |
+| `src/Blocks.jsx` | 頁面連結、嵌入白板、嵌入 HTML |
+| `src/Links.jsx` | 反向連結側欄、關聯圖 |
 
-## 更新排程表
+## 預覽版
 
-原本的排程表改好之後，執行：
-
-```
-npm run sync-schedule -- <原本的 schedule.html 路徑>
-```
-
-會把它複製到 `public/schedule.html`，只多加一行橋接程式，其餘完全不變。
+`preview` 分支會發布到 `/notes/preview/`，使用獨立的測試資料。確認沒問題後再合併到 `main`。
 
 ## 授權
 

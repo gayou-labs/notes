@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { BlockNoteSchema, combineByGroup, filterSuggestionItems } from "@blocknote/core";
+import {
+  BlockNoteSchema,
+  combineByGroup,
+  defaultBlockSpecs,
+  defaultInlineContentSpecs,
+  filterSuggestionItems,
+  insertOrUpdateBlockForSlashMenu,
+} from "@blocknote/core";
 import * as locales from "@blocknote/core/locales";
 import { useCreateBlockNote, SuggestionMenuController, getDefaultReactSlashMenuItems } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
@@ -7,12 +14,63 @@ import { withMultiColumn, multiColumnDropCursor, getMultiColumnSlashMenuItems } 
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import { store, CLIENT_ID, uploadImage, resolveFile } from "./store.js";
+import { PageLink, BoardEmbed, HtmlEmbed } from "./Blocks.jsx";
+import { actions, getPage, getPages, linkedIds, titleOf, iconOf } from "./registry.js";
 
-const schema = withMultiColumn(BlockNoteSchema.create());
+const schema = withMultiColumn(
+  BlockNoteSchema.create({
+    blockSpecs: { ...defaultBlockSpecs, boardEmbed: BoardEmbed(), htmlEmbed: HtmlEmbed() },
+    inlineContentSpecs: { ...defaultInlineContentSpecs, pageLink: PageLink },
+  }),
+);
+
+const embedItems = (editor) => [
+  {
+    title: "嵌入白板",
+    subtext: "在筆記裡顯示白板，按「編輯」直接畫",
+    aliases: ["白板", "board", "whiteboard", "baiban", "畫"],
+    group: "嵌入",
+    icon: <span className="slash-ic">🖼️</span>,
+    onItemClick: () => insertOrUpdateBlockForSlashMenu(editor, { type: "boardEmbed" }),
+  },
+  {
+    title: "HTML／網頁",
+    subtext: "貼上 HTML 程式碼或網址，可以直接在筆記裡操作",
+    aliases: ["html", "embed", "iframe", "網頁", "嵌入", "網址"],
+    group: "嵌入",
+    icon: <span className="slash-ic">🧩</span>,
+    onItemClick: () => insertOrUpdateBlockForSlashMenu(editor, { type: "htmlEmbed" }),
+  },
+];
+
+// 輸入 [[ 或 @ 連結到其他頁面
+function pageItems(editor, query, selfId) {
+  const q = query.trim().toLowerCase();
+  const list = getPages()
+    .filter((p) => !p.trashed && p.id !== selfId && titleOf(p).toLowerCase().includes(q))
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
+    .slice(0, 12)
+    .map((p) => ({
+      title: titleOf(p),
+      icon: <span className="slash-ic">{iconOf(p)}</span>,
+      subtext: p.parentId && getPage(p.parentId) ? "在「" + titleOf(getPage(p.parentId)) + "」裡" : undefined,
+      onItemClick: () => editor.insertInlineContent([{ type: "pageLink", props: { pageId: p.id } }, " "]),
+    }));
+  if (q)
+    list.push({
+      title: `新增頁面「${query.trim()}」並連結`,
+      icon: <span className="slash-ic">＋</span>,
+      onItemClick: async () => {
+        const p = await actions.createPage({ parentId: selfId, title: query.trim(), open: false });
+        if (p) editor.insertInlineContent([{ type: "pageLink", props: { pageId: p.id } }, " "]);
+      },
+    });
+  return list;
+}
 const g = "基本區塊";
 const dictionary = {
   ...locales.zhTW,
-  placeholders: { ...locales.zhTW.placeholders, default: "輸入文字，或按「/」插入標題、清單、圖片、分欄…" },
+  placeholders: { ...locales.zhTW.placeholders, default: "輸入文字；按「/」插入標題、清單、分欄、白板…；輸入 [[ 連結其他頁面" },
   multi_column: {
     slash_menu: {
       two_columns: { title: "兩欄", subtext: "左右兩欄並排", aliases: ["欄", "分欄", "columns", "lan"], group: g },
@@ -94,6 +152,10 @@ function EditorInner({ pageId, initial, theme, onTextChange }) {
     if (body.length > 950_000) alert("這一頁內容太大，可能無法同步。建議把內容拆成幾個子頁面。");
     store.putContent(pageId, { body, clientId: CLIENT_ID, savedAt: Date.now() }).catch(() => {});
     onTextChange?.(pageId);
+    // 記下這頁連到哪些頁面，用來顯示「反向連結」
+    const links = linkedIds(editor.document);
+    const before = getPage(pageId)?.links || [];
+    if (links.join() !== before.join()) actions.updatePage(pageId, { links });
   };
 
   const applyingRemote = useRef(false);
@@ -113,9 +175,11 @@ function EditorInner({ pageId, initial, theme, onTextChange }) {
     const flush = () => dirty.current && save();
     const vis = () => document.visibilityState === "hidden" && flush();
     window.addEventListener("pagehide", flush);
+    window.addEventListener("flush-now", flush);
     document.addEventListener("visibilitychange", vis);
     return () => {
       flush();
+      window.removeEventListener("flush-now", flush);
       window.removeEventListener("pagehide", flush);
       document.removeEventListener("visibilitychange", vis);
     };
@@ -150,11 +214,13 @@ function EditorInner({ pageId, initial, theme, onTextChange }) {
         triggerCharacter="/"
         getItems={async (query) =>
           filterSuggestionItems(
-            combineByGroup(getDefaultReactSlashMenuItems(editor), getMultiColumnSlashMenuItems(editor)),
+            combineByGroup(getDefaultReactSlashMenuItems(editor), getMultiColumnSlashMenuItems(editor), embedItems(editor)),
             query,
           )
         }
       />
+      <SuggestionMenuController triggerCharacter="[[" getItems={async (q) => pageItems(editor, q, pageId)} />
+      <SuggestionMenuController triggerCharacter="@" getItems={async (q) => pageItems(editor, q, pageId)} />
     </BlockNoteView>
   );
 }

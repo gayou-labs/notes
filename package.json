@@ -4,8 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/copy-fonts.mjs && vite build",
-    "preview": "vite preview",
-    "sync-schedule": "node scripts/sync-schedule.mjs"
+    "preview": "vite preview"
   },
   "license": "GPL-3.0",
   "dependencies": {
@@ -16,6 +15,10 @@
     "@excalidraw/excalidraw": "^0.18.1",
     "@mantine/core": "^8.3.18",
     "@mantine/hooks": "^8.3.18",
+    "d3-drag": "^3.0.0",
+    "d3-force": "^3.0.0",
+    "d3-selection": "^3.0.0",
+    "d3-zoom": "^3.0.0",
     "firebase": "^13.1.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"

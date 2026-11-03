@@ -6,14 +6,17 @@ import {
   uid16,
   onSyncStatus,
   exportAll,
+  pendingWrites,
   importAll,
   readLocalData,
   clearLocalData,
 } from "./store.js";
 import Editor from "./Editor.jsx";
+import { setPageIndex, actions } from "./registry.js";
+import { BacklinksPanel } from "./Links.jsx";
 
 const Board = lazy(() => import("./Board.jsx"));
-const Schedule = lazy(() => import("./Schedule.jsx"));
+const GraphView = lazy(() => import("./Links.jsx").then((m) => ({ default: m.GraphView })));
 
 const EMOJIS = "📝 📒 📓 📔 📕 📗 📘 📙 📚 📄 📋 📌 📎 🗂️ 🗓️ 📅 ⏰ ✅ ☑️ ⭐ 💡 🔖 🏷️ 🧠 💬 🎯 🚀 🛠️ 🔧 ⚙️ 💻 🖥️ 📱 🎨 🖌️ ✏️ 🖍️ 📷 🎬 🎵 🍀 🌱 🌸 🔥 💧 ☀️ 🌙 ❤️ 🧡 💛 💚 💙 💜 🖤 🏠 ✈️ 🍳 ☕ 🐱 🐶".split(" ");
 
@@ -77,11 +80,36 @@ export default function App() {
   const [sync, setSync] = useState({ inflight: 0, online: true, error: null });
   const [sideOpen, setSideOpen] = useState(() => !isMobile());
   const [searchOpen, setSearchOpen] = useState(false);
+  const [blOpen, setBlOpenRaw] = useState(() => {
+    try {
+      return localStorage.getItem("notes-rpanel") === "1" && !isMobile();
+    } catch {
+      return false;
+    }
+  });
+  const setBlOpen = (v) => {
+    setBlOpenRaw(v);
+    try {
+      localStorage.setItem("notes-rpanel", v ? "1" : "0");
+    } catch {}
+  };
   const [theme, themePref, setTheme] = useTheme();
   const route = useHashRoute();
 
   useEffect(() => store.init(setUser), []);
   useEffect(() => onSyncStatus(setSync), []);
+  // 關閉或重新整理時：先把還沒存的內容存起來；如果還有內容沒上傳到雲端，跳出提醒
+  useEffect(() => {
+    const on = (e) => {
+      window.dispatchEvent(new Event("flush-now"));
+      if (cloudConfigured && pendingWrites() > 0) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", on);
+    return () => window.removeEventListener("beforeunload", on);
+  }, []);
   useEffect(() => {
     if (!user) return;
     return store.subscribePages(setPages);
@@ -120,11 +148,11 @@ export default function App() {
     [pages],
   );
 
-  const createPage = async ({ parentId = null, type = "doc", open = true } = {}) => {
+  const createPage = async ({ parentId = null, type = "doc", open = true, title = "" } = {}) => {
     const siblings = kids(parentId);
     const p = {
       id: uid16(),
-      title: "",
+      title,
       icon: "",
       type,
       parentId,
@@ -141,6 +169,10 @@ export default function App() {
     return p;
   };
   const updatePage = (id, patch) => store.putPage({ id, ...patch, updatedAt: now() }).catch(() => {});
+  useEffect(() => setPageIndex(pages), [pages]);
+  actions.createPage = createPage;
+  actions.updatePage = updatePage;
+  actions.theme = theme;
   const touch = (id) => updatePage(id, {});
 
   const [expandedSet, setExpandedSet] = useState(() => {
@@ -165,24 +197,24 @@ export default function App() {
   if (pages === null) return <Splash text={sync.error ? "讀取失敗：" + sync.error : "讀取筆記中…"} />;
 
   const page = route.view === "p" ? byId[route.id] : null;
-  const ctx = { pages, byId, kids, isGone, createPage, updatePage, touch, expandedSet, setExpanded, user, theme };
+  const ctx = { pages, byId, kids, isGone, createPage, updatePage, touch, expandedSet, setExpanded, user, theme, blOpen, setBlOpen };
 
   let main;
   if (route.view === "p") {
     main = page ? <PageView key={page.id} page={page} ctx={ctx} /> : <Empty text="找不到這一頁，可能已被永久刪除。" />;
   } else if (route.view === "trash") main = <TrashView ctx={ctx} />;
-  else if (route.view === "settings")
-    main = <SettingsView ctx={ctx} themePref={themePref} setTheme={setTheme} sync={sync} />;
-  else if (route.view === "schedule")
+  else if (route.view === "graph")
     main = (
-      <Suspense fallback={<div className="loading">載入排程…</div>}>
-        <Schedule theme={theme} />
+      <Suspense fallback={<div className="loading">載入關聯圖…</div>}>
+        <GraphView ctx={ctx} />
       </Suspense>
     );
+  else if (route.view === "settings")
+    main = <SettingsView ctx={ctx} themePref={themePref} setTheme={setTheme} sync={sync} />;
   else main = <HomeView ctx={ctx} />;
 
   const crumbs = page ? breadcrumb(page, byId) : [];
-  const fullBleed = route.view === "schedule" || page?.type === "board";
+  const fullBleed = route.view === "graph" || page?.type === "board";
 
   return (
     <div className={"app" + (sideOpen ? " side-open" : "")}>
@@ -206,9 +238,14 @@ export default function App() {
               ))}
             {route.view === "trash" && <span className="crumb">垃圾桶</span>}
             {route.view === "settings" && <span className="crumb">設定</span>}
-            {route.view === "schedule" && <span className="crumb">🗓️ 排程</span>}
+            {route.view === "graph" && <span className="crumb">🕸️ 關聯圖</span>}
           </nav>
           <SyncDot sync={sync} />
+          {page && (
+            <button className={"ibtn" + (blOpen ? " on" : "")} title="反向連結" onClick={() => setBlOpen(!blOpen)}>
+              <Icon name="link" />
+            </button>
+          )}
           {page && <PageMenu page={page} ctx={ctx} />}
         </header>
         {sync.error && /permission|權限|insufficient/i.test(sync.error) && (
@@ -228,7 +265,10 @@ export default function App() {
         {!cloudConfigured && route.view !== "settings" && (
           <div className="banner">本機試用模式：資料只存在這台裝置。設定好 Firebase 後就會改成雲端同步。</div>
         )}
-        <div className={"content" + (fullBleed ? " bleed" : "")}>{main}</div>
+        <div className="content-row">
+          <div className={"content" + (fullBleed ? " bleed" : "")}>{main}</div>
+          {page && blOpen && <BacklinksPanel page={page} ctx={ctx} onClose={() => setBlOpen(false)} />}
+        </div>
       </main>
       {searchOpen && <SearchDialog ctx={ctx} onClose={() => setSearchOpen(false)} />}
     </div>
@@ -261,8 +301,8 @@ function Sidebar({ ctx, route, sync, onSearch, onClose }) {
         <a className={"srow" + (route.view === "home" ? " on" : "")} href="#/">
           <Icon name="home" /> 首頁
         </a>
-        <a className={"srow" + (route.view === "schedule" ? " on" : "")} href="#/schedule">
-          <Icon name="cal" /> 排程
+        <a className={"srow" + (route.view === "graph" ? " on" : "")} href="#/graph">
+          <Icon name="graph" /> 關聯圖
         </a>
       </div>
       <div className="side-scroll">
@@ -383,8 +423,9 @@ function Tree({ parentId, depth, ctx, route }) {
 
 /* ---------------- 頁面 ---------------- */
 function PageView({ page, ctx }) {
-  const { updatePage, kids, touch, theme } = ctx;
+  const { updatePage, kids, touch, theme, pages, isGone } = ctx;
   const sub = kids(page.id);
+  const backlinks = pages.filter((p) => p.id !== page.id && (p.links || []).includes(page.id) && !isGone(p));
   const lastTouch = useRef(0);
   const onTextChange = () => {
     if (now() - lastTouch.current > 30_000) {
@@ -414,6 +455,9 @@ function PageView({ page, ctx }) {
         <TitleInput page={page} ctx={ctx} />
       </div>
       <Editor pageId={page.id} theme={theme} onTextChange={onTextChange} />
+      <button className={"bl-chip" + (ctx.blOpen ? " on" : "")} onClick={() => ctx.setBlOpen(!ctx.blOpen)} title="顯示反向連結">
+        {backlinks.length} 個反向連結
+      </button>
       <div className="subpages">
         {sub.length > 0 && <div className="sub-label">子頁面</div>}
         {sub.map((p) => (
@@ -633,9 +677,6 @@ function HomeView({ ctx }) {
         <button className="qcard" onClick={() => createPage({ type: "board" })}>
           <span>🖼️</span>新白板
         </button>
-        <a className="qcard" href="#/schedule">
-          <span>🗓️</span>排程
-        </a>
       </div>
       <h2 className="h2">最近編輯</h2>
       {recent.length === 0 && <p className="muted">還沒有任何頁面。</p>}
@@ -667,6 +708,17 @@ function timeAgo(t) {
 function TrashView({ ctx }) {
   const { pages, byId, updatePage } = ctx;
   const trashed = pages.filter((p) => p.trashed).sort((a, b) => (b.trashedAt || 0) - (a.trashedAt || 0));
+  const [sel, setSel] = useState(() => new Set());
+  const [busy, setBusy] = useState("");
+  const live = new Set(trashed.map((p) => p.id));
+  const picked = [...sel].filter((id) => live.has(id));
+  const allOn = trashed.length > 0 && picked.length === trashed.length;
+  const toggle = (id) =>
+    setSel((s) => {
+      const n = new Set(s);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
   const descendants = (id) => {
     const out = [];
     const walk = (pid) =>
@@ -677,30 +729,61 @@ function TrashView({ ctx }) {
     walk(id);
     return out;
   };
-  const purge = async (p) => {
-    const ids = [p.id, ...descendants(p.id)];
-    if (!confirm(`永久刪除「${titleOf(p)}」${ids.length > 1 ? `和底下 ${ids.length - 1} 個子頁面` : ""}？刪除後無法復原。`)) return;
+  const purge = async (list) => {
+    if (!list.length) return;
+    const ids = [...new Set(list.flatMap((p) => [p.id, ...descendants(p.id)]))];
+    const extra = ids.length - list.length;
+    const what = list.length === 1 ? `「${titleOf(list[0])}」` : `${list.length} 個頁面`;
+    if (!confirm(`永久刪除${what}${extra > 0 ? `（連同底下 ${extra} 個子頁面）` : ""}？刪除後無法復原。`)) return;
+    setBusy("刪除中…");
     for (const id of ids) await store.removePage(id).catch(() => {});
+    setSel(new Set());
+    setBusy("");
   };
-  const restore = (p) => {
-    const parentOk = !p.parentId || (byId[p.parentId] && !byId[p.parentId].trashed);
-    updatePage(p.id, { trashed: false, ...(parentOk ? {} : { parentId: null }) });
+  const restore = (list) => {
+    for (const p of list) {
+      const parentOk = !p.parentId || (byId[p.parentId] && !byId[p.parentId].trashed && !list.some((x) => x.id === p.parentId));
+      updatePage(p.id, { trashed: false, ...(parentOk ? {} : { parentId: null }) });
+    }
+    setSel(new Set());
   };
+  const pickedPages = trashed.filter((p) => sel.has(p.id));
   return (
     <div className="page">
       <h1 className="h1">垃圾桶</h1>
       <p className="muted">刪除的頁面會先放在這裡，可以還原。永久刪除後就救不回來了。</p>
       {trashed.length === 0 && <p className="muted">垃圾桶是空的。</p>}
+      {trashed.length > 0 && (
+        <div className="trash-bar">
+          <label className="ck">
+            <input type="checkbox" checked={allOn} onChange={() => setSel(allOn ? new Set() : new Set(trashed.map((p) => p.id)))} />
+            全選
+          </label>
+          <span className="muted sm">{picked.length ? `已選 ${picked.length} 個` : ""}</span>
+          <span className="grow" />
+          <button className="btn sm" disabled={!picked.length} onClick={() => restore(pickedPages)}>
+            還原選取
+          </button>
+          <button className="btn sm danger" disabled={!picked.length || !!busy} onClick={() => purge(pickedPages)}>
+            永久刪除選取
+          </button>
+          <button className="btn sm danger" disabled={!!busy} onClick={() => purge(trashed)}>
+            清空垃圾桶
+          </button>
+        </div>
+      )}
+      {busy && <p className="muted sm">{busy}</p>}
       <div className="list">
         {trashed.map((p) => (
-          <div key={p.id} className="lrow static">
+          <div key={p.id} className={"lrow static" + (sel.has(p.id) ? " sel" : "")}>
+            <input type="checkbox" checked={sel.has(p.id)} onChange={() => toggle(p.id)} aria-label={"選取 " + titleOf(p)} />
             <span className="pi">{iconOf(p)}</span>
             <span className="grow">{titleOf(p)}</span>
             <span className="muted sm">{timeAgo(p.trashedAt || p.updatedAt)}</span>
-            <button className="btn sm" onClick={() => restore(p)}>
+            <button className="btn sm" onClick={() => restore([p])}>
               還原
             </button>
-            <button className="btn sm danger" onClick={() => purge(p)}>
+            <button className="btn sm danger" onClick={() => purge([p])}>
               永久刪除
             </button>
           </div>
@@ -710,7 +793,15 @@ function TrashView({ ctx }) {
   );
 }
 
-function SettingsView({ ctx, themePref, setTheme, sync }) {
+function SettingsView({ tab, theme, ...props }) {
+  return (
+    <div className="settings-wrap">
+      <GeneralSettings {...props} />
+    </div>
+  );
+}
+
+function GeneralSettings({ ctx, themePref, setTheme, sync }) {
   const { pages, user } = ctx;
   const [msg, setMsg] = useState("");
   const [localData, setLocalData] = useState(null);
@@ -759,9 +850,7 @@ function SettingsView({ ctx, themePref, setTheme, sync }) {
   };
 
   return (
-    <div className="page">
-      <h1 className="h1">設定</h1>
-
+    <div className="page settings-page">
       <section className="card">
         <h3>帳號與同步</h3>
         {cloudConfigured ? (
@@ -801,7 +890,7 @@ function SettingsView({ ctx, themePref, setTheme, sync }) {
       {CHANNEL === "preview" && cloudConfigured && (
         <section className="card">
           <h3>預覽版測試資料</h3>
-          <p className="muted sm">把正式版目前的筆記、白板、排程複製一份到預覽版，方便用真實資料測試新功能。正式資料不會被修改。</p>
+          <p className="muted sm">把正式版目前的筆記、白板複製一份到預覽版，方便用真實資料測試新功能。正式資料不會被修改。</p>
           <button
             className="btn"
             onClick={async () => {
@@ -819,6 +908,8 @@ function SettingsView({ ctx, themePref, setTheme, sync }) {
           </button>
         </section>
       )}
+
+      <OldScheduleData setMsg={setMsg} />
 
       <section className="card">
         <h3>外觀</h3>
@@ -857,6 +948,35 @@ function SettingsView({ ctx, themePref, setTheme, sync }) {
       </section>
       {msg && <p className="ok">{msg}</p>}
     </div>
+  );
+}
+
+// 排程已移出筆記工具：之前匯入的排程資料可以在這裡刪除
+function OldScheduleData({ setMsg }) {
+  const [has, setHas] = useState(false);
+  useEffect(() => store.subscribeKV("schedule-main", (v) => setHas(!!v)), []);
+  if (!has) return null;
+  return (
+    <section className="card">
+      <h3>之前匯入的排程資料</h3>
+      <p className="muted sm">
+        排程已經移回獨立的排程表，筆記工具裡還留著一份之前匯入的排程資料。刪除後只會刪掉這一份，雲端硬碟裡排程表自己的同步檔不受影響。
+      </p>
+      <button
+        className="btn danger"
+        onClick={async () => {
+          if (!confirm("刪除筆記工具裡的排程資料？刪除後無法復原（雲端硬碟裡的排程表不受影響）。")) return;
+          try {
+            await store.removeKV("schedule-main");
+            setMsg("已刪除筆記工具裡的排程資料。");
+          } catch (e) {
+            setMsg("刪除失敗：" + e.message);
+          }
+        }}
+      >
+        刪除這份排程資料
+      </button>
+    </section>
   );
 }
 
@@ -1039,6 +1159,9 @@ const PATHS = {
   trash: "M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13",
   gear: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   chev: "M9 6l6 6-6 6",
+  user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0",
+  link: "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1",
+  graph: "M4 6a2 2 0 1 0 4 0a2 2 0 1 0-4 0M16 7a2 2 0 1 0 4 0a2 2 0 1 0-4 0M10 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0M8 6.3l8 .5M7 8l4 8M17 9l-4 7",
   more: "M5 12h.01M12 12h.01M19 12h.01",
   star: "M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z",
   "star-on": "M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z",

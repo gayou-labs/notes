@@ -11,6 +11,14 @@
     <link rel="apple-touch-icon" href="./icon-192.png" />
     <script>
       window.EXCALIDRAW_ASSET_PATH = new URL(".", location.href).href;
+      // 從 Excalidraw 素材網站回來：先記下要加入的素材，再回到剛才的白板
+      if (location.hash.indexOf("addLibrary=") >= 0) {
+        try {
+          sessionStorage.setItem("pending-library", location.hash);
+          var b = localStorage.getItem("notes-last-board");
+          history.replaceState(null, "", location.pathname + (b ? "#/p/" + b : "#/"));
+        } catch (e) {}
+      }
       try {
         var t = localStorage.getItem("notes-theme");
         if (!t || t === "system") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
